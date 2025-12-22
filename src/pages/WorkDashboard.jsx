@@ -42,33 +42,31 @@ const WorkDashboard = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.2 }}
-            className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+            className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative"
         >
+            <div className="absolute top-0 left-0 w-64 h-64 bg-emerald-50/50 rounded-full blur-3xl -z-10 animate-blob"></div>
+
             {/* Tab Navigation */}
-            <div className="flex border-b border-gray-200 mb-8">
+            <div className="flex bg-white/50 backdrop-blur-md p-1.5 rounded-[24px] border border-gray-100 mb-12 w-fit mx-auto sm:mx-0 premium-shadow">
                 <button
                     onClick={() => setActiveTab('browse')}
-                    className={`pb-4 px-6 text-sm font-bold transition-all border-b-2 ${activeTab === 'browse'
-                            ? 'border-emerald-600 text-emerald-600'
-                            : 'border-transparent text-gray-500 hover:text-gray-700'
+                    className={`py-3 px-8 text-sm font-black transition-all rounded-[18px] flex items-center gap-2 ${activeTab === 'browse'
+                        ? 'bg-gray-900 text-white shadow-lg shadow-gray-200'
+                        : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
                         }`}
                 >
-                    <div className="flex items-center gap-2">
-                        <Search className="w-4 h-4" />
-                        Browse Jobs
-                    </div>
+                    <Search className="w-4 h-4" />
+                    Browse Jobs
                 </button>
                 <button
                     onClick={() => setActiveTab('quotes')}
-                    className={`pb-4 px-6 text-sm font-bold transition-all border-b-2 ${activeTab === 'quotes'
-                            ? 'border-emerald-600 text-emerald-600'
-                            : 'border-transparent text-gray-500 hover:text-gray-700'
+                    className={`py-3 px-8 text-sm font-black transition-all rounded-[18px] flex items-center gap-2 ${activeTab === 'quotes'
+                        ? 'bg-gray-900 text-white shadow-lg shadow-gray-200'
+                        : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
                         }`}
                 >
-                    <div className="flex items-center gap-2">
-                        <Briefcase className="w-4 h-4" />
-                        My Sent Quotes
-                    </div>
+                    <Briefcase className="w-4 h-4" />
+                    My Sent Quotes
                 </button>
             </div>
 
