@@ -20,7 +20,6 @@ const HireDashboard = () => {
         return <Navigate to="/login" replace />;
     }
 
-    // Filter for My Active Requests
     const myServices = services.filter(service =>
         service.user_id === user.id
     );
@@ -50,36 +49,26 @@ const HireDashboard = () => {
                     Create New Post
                 </Link>
             </div>
-            <PlusCircle className="w-5 h-5" />
-            Create New Post
-        </Link>
-                </div >
-            </div >
 
-{
-    myServices.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {myServices.map(service => (
-                <ServiceCard key={service.id} service={service} isOwner={true} />
-            ))}
-        </div>
-    ) : (
-        <div className="text-center py-20 bg-white rounded-2xl border border-gray-100 shadow-sm border-dashed">
-            <div className="bg-indigo-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <PlusCircle className="w-8 h-8 text-indigo-600" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {myServices.length > 0 ? (
+                    myServices.map((service) => (
+                        <ServiceCard key={service.id} service={service} isOwner={true} />
+                    ))
+                ) : (
+                    <div className="col-span-full py-20 text-center glass-card rounded-[32px]">
+                        <p className="text-gray-500 mb-6 font-medium">You haven't posted any help requests yet.</p>
+                        <Link
+                            to="/post-service"
+                            className="text-indigo-600 font-bold uppercase tracking-widest text-sm hover:text-indigo-700 transition-all flex items-center justify-center gap-2 group"
+                        >
+                            Start your first post
+                            <PlusCircle className="w-5 h-5 group-hover:rotate-90 transition-transform" />
+                        </Link>
+                    </div>
+                )}
             </div>
-            <h3 className="text-lg font-medium text-gray-900">No requests yet</h3>
-            <p className="text-gray-500 mt-1 mb-6 max-w-sm mx-auto">Post your first service request to start receiving quotes from professionals.</p>
-            <Link
-                to="/post-service"
-                className="text-indigo-600 font-bold hover:underline"
-            >
-                Post a Service Now
-            </Link>
-        </div>
-    )
-}
-        </motion.div >
+        </motion.div>
     );
 };
 
