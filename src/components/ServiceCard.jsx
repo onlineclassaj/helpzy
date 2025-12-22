@@ -1,11 +1,24 @@
 import React, { useState } from 'react';
-import { Clock, ArrowRight, MessageSquare, Eye } from 'lucide-react';
+import { Clock, ArrowRight, MessageSquare, Eye, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import QuoteModal from './QuoteModal';
 
 const ServiceCard = ({ service, isOwner = false }) => {
+    const { deleteService } = useServices();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    const handleDelete = async () => {
+        if (window.confirm('Are you sure you want to delete this job post? This action cannot be undone.')) {
+            setIsDeleting(true);
+            const result = await deleteService(service.id);
+            if (!result.success) {
+                alert(result.message || 'Failed to delete service.');
+                setIsDeleting(false);
+            }
+        }
+    };
 
     const quoteCount = service.quotes ? service.quotes.length : 0;
     const hasQuotes = quoteCount > 0;
@@ -42,13 +55,27 @@ const ServiceCard = ({ service, isOwner = false }) => {
                     </div>
 
                     {isOwner ? (
-                        <Link
-                            to={`/service/${service.id}`}
-                            className="w-full bg-gray-900 text-white font-medium py-2.5 rounded-lg hover:bg-black transition-colors flex items-center justify-center gap-2"
-                        >
-                            View Quotes & Details
-                            <Eye className="w-4 h-4" />
-                        </Link>
+                        <div className="flex gap-2">
+                            <Link
+                                to={`/service/${service.id}`}
+                                className="flex-grow bg-gray-900 text-white font-medium py-2.5 rounded-lg hover:bg-black transition-colors flex items-center justify-center gap-2"
+                            >
+                                View Quotes
+                                <Eye className="w-4 h-4" />
+                            </Link>
+                            <button
+                                onClick={handleDelete}
+                                disabled={isDeleting}
+                                title="Delete Post"
+                                className="px-3 py-2.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50"
+                            >
+                                {isDeleting ? (
+                                    <div className="w-5 h-5 border-2 border-red-600 border-t-transparent animate-spin rounded-full" />
+                                ) : (
+                                    <Trash2 className="w-5 h-5" />
+                                )}
+                            </button>
+                        </div>
                     ) : (
                         <div className="space-y-3">
                             {/* Bid History Link */}

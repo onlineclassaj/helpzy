@@ -203,10 +203,31 @@ export const ServiceProvider = ({ children }) => {
         }
     };
 
+    const deleteService = async (serviceId) => {
+        if (!user) return { success: false, message: 'Must be logged in' };
+
+        try {
+            const { error } = await supabase
+                .from('services')
+                .delete()
+                .eq('id', serviceId)
+                .eq('user_id', user.id); // Security: ensure user owns the service
+
+            if (error) throw error;
+
+            await fetchServices();
+            return { success: true };
+        } catch (error) {
+            console.error('DeleteService Error:', error.message);
+            return { success: false, message: error.message };
+        }
+    };
+
     return (
         <ServiceContext.Provider value={{
             services,
             addService,
+            deleteService,
             addQuote,
             user,
             login,
