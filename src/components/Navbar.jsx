@@ -29,6 +29,7 @@ const Navbar = () => {
                     <div className="flex-shrink-0 flex items-center">
                         <Link to="/" className="text-2xl font-bold text-indigo-600 flex items-center gap-2">
                             Helpzy
+                            <span className="text-[10px] bg-indigo-100 text-indigo-600 px-1.5 py-0.5 rounded-md align-top">v2.1</span>
                         </Link>
                     </div>
 
