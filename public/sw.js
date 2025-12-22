@@ -1,4 +1,4 @@
-const CACHE_NAME = 'helpzy-v2'; // Incremented version to force update
+const CACHE_NAME = 'helpzy-v3'; // Force update for new delete and tab features
 const urlsToCache = [
     '/',
     '/index.html'
