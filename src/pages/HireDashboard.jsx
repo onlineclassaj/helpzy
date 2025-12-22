@@ -33,6 +33,17 @@ const HireDashboard = () => {
             transition={{ duration: 0.2 }}
             className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
         >
+            {/* DEBUG BANNER - REMOVE AFTER VERIFICATION */}
+            <div className="bg-red-600 text-white p-4 rounded-xl mb-6 shadow-lg border-4 border-yellow-400">
+                <h2 className="text-lg font-black uppercase">⚠️ DEBUG MODE: NEW FEATURES VERSION ⚠️</h2>
+                <p className="text-sm font-bold mt-1">If you can see this red box, the push WORKED!</p>
+                <div className="flex gap-4 mt-2 text-xs opacity-90">
+                    <span>User ID: {user.id.substring(0, 8)}...</span>
+                    <span>Posts Found: {myServices.length}</span>
+                    <span>Time: {new Date().toLocaleTimeString()}</span>
+                </div>
+            </div>
+
             <div className="flex items-center justify-between mb-8">
                 <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                     <List className="w-5 h-5 text-indigo-600" />
