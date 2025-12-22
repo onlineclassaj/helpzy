@@ -38,13 +38,30 @@ const HireDashboard = () => {
                     <List className="w-5 h-5 text-indigo-600" />
                     My Active Requests
                 </h2>
-                <Link
-                    to="/post-service"
-                    className="bg-indigo-600 text-white px-5 py-2.5 rounded-lg hover:bg-indigo-700 transition-colors font-medium shadow-md flex items-center gap-2"
-                >
-                    <PlusCircle className="w-5 h-5" />
-                    Create New Post
-                </Link>
+                <div className="flex items-center gap-3">
+                    <button
+                        onClick={() => {
+                            if (window.confirm('This will refresh the app to the latest version. Continue?')) {
+                                navigator.serviceWorker.getRegistrations().then(registrations => {
+                                    for (let registration of registrations) {
+                                        registration.unregister();
+                                    }
+                                    window.location.reload(true);
+                                });
+                            }
+                        }}
+                        className="text-xs text-gray-400 hover:text-indigo-600 transition-colors underline"
+                    >
+                        Force Update
+                    </button>
+                    <Link
+                        to="/post-service"
+                        className="bg-indigo-600 text-white px-5 py-2.5 rounded-lg hover:bg-indigo-700 transition-colors font-medium shadow-md flex items-center gap-2"
+                    >
+                        <PlusCircle className="w-5 h-5" />
+                        Create New Post
+                    </Link>
+                </div>
             </div>
 
             {myServices.length > 0 ? (

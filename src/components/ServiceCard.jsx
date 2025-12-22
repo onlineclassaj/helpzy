@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Clock, ArrowRight, MessageSquare, Eye, Trash2 } from 'lucide-react';
+import { useServices } from '../context/ServiceContext';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import QuoteModal from './QuoteModal';
