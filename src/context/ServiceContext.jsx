@@ -23,41 +23,33 @@ export const ServiceProvider = ({ children }) => {
     // Fetch services from Supabase
     const fetchServices = async () => {
         setLoading(true);
+        console.log('STABILIZATION: fetchServices START');
         try {
             if (!supabase) {
-                console.error('Supabase client is NULL. Check environment variables.');
+                console.error('STABILIZATION: Supabase client is null');
                 setLoading(false);
                 return;
             }
 
-            console.log('Fetching services from Supabase...');
+            // Simple fetch without joins initially to prove stability
             const { data, error } = await supabase
                 .from('services')
-                .select(`
-                    *,
-                    profiles:user_id(full_name),
-                    quotes (
-                        *,
-                        profiles:user_id(full_name)
-                    )
-                `)
+                .select('*')
                 .order('created_at', { ascending: false });
 
             if (error) {
-                console.error('FetchServices Supabase Error:', error);
-                // Try fallback without joins if complex query fails
-                const { data: simpleData, error: simpleError } = await supabase
-                    .from('services')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-
-                if (simpleError) throw simpleError;
-                console.warn('Using simple data fallback');
-                setServices(simpleData.map(s => ({ ...s, createdAt: s.created_at, quotes: [] })));
-                return;
+                console.error('STABILIZATION: Supabase error:', error);
+                throw error;
             }
 
-            console.log('Raw Supabase Response:', data);
+            console.log('STABILIZATION: Data received', data?.length);
+
+            const mappedData = (data || []).map(s => ({
+                ...s,
+                createdAt: s.created_at || new Date().toISOString(),
+                clientName: 'Anonymous',
+                quotes: []
+            }));
 
             const mappedData = (data || []).map(service => {
                 if (!service) return null;

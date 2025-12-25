@@ -20,58 +20,27 @@ self.addEventListener('install', (event) => {
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
 
-    // SECURITY FIX: Only handle http/https
-    if (url.protocol !== 'http:' && url.protocol !== 'https:') {
-        return;
-    }
+    // SECURITY: Only handle http/https
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
 
-    // NETWORK FIRST for index, html, and root to ensure updates are seen
-    const isHtml = event.request.mode === 'navigate' ||
-        url.pathname === '/' ||
-        url.pathname.endsWith('.html');
+    event.respondWith(
+        caches.match(event.request).then((cachedResponse) => {
+            if (cachedResponse) return cachedResponse;
 
-    if (isHtml) {
-        event.respondWith(
-            fetch(event.request)
-                .then(response => {
-                    // Update cache with new version
-                    const responseClone = response.clone();
-                    caches.open(CACHE_NAME).then(cache => {
-                        cache.put(event.request, responseClone);
-                    });
+            return fetch(event.request).then((response) => {
+                if (!response || response.status !== 200 || response.type !== 'basic') {
                     return response;
-                })
-                .catch(() => {
-                    // Fallback to cache if offline
-                    return caches.match(event.request);
-                })
-        );
-    } else {
-        // CACHE FIRST for assets (JS, CSS, Images) as they have hashed filenames
-        event.respondWith(
-            caches.match(event.request)
-                .then((response) => {
-                    if (response) {
-                        return response;
-                    }
-
-                    const fetchRequest = event.request.clone();
-
-                    return fetch(fetchRequest).then((response) => {
-                        if (!response || response.status !== 200 || response.type !== 'basic') {
-                            return response;
-                        }
-
-                        const responseToCache = response.clone();
-                        caches.open(CACHE_NAME).then((cache) => {
-                            cache.put(event.request, responseToCache);
-                        });
-
-                        return response;
-                    });
-                })
-        );
-    }
+                }
+                const responseToCache = response.clone();
+                caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(event.request, responseToCache);
+                });
+                return response;
+            }).catch(() => {
+                return null;
+            });
+        })
+    );
 });
 
 // Activate event - clean up old caches
