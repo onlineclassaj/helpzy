@@ -23,6 +23,12 @@ export const ServiceProvider = ({ children }) => {
     // Fetch services from Supabase
     const fetchServices = async () => {
         try {
+            if (!supabase) {
+                console.error('Supabase client is NULL. Check environment variables.');
+                setLoading(false);
+                return;
+            }
+
             console.log('Fetching services from Supabase...');
             const { data, error } = await supabase
                 .from('services')
@@ -38,27 +44,38 @@ export const ServiceProvider = ({ children }) => {
 
             if (error) {
                 console.error('FetchServices Supabase Error:', error);
-                throw error;
+                // Try fallback without joins if complex query fails
+                const { data: simpleData, error: simpleError } = await supabase
+                    .from('services')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (simpleError) throw simpleError;
+                console.warn('Using simple data fallback');
+                setServices(simpleData.map(s => ({ ...s, createdAt: s.created_at, quotes: [] })));
+                return;
             }
 
             console.log('Raw Supabase Response:', data);
 
-            // Map the data for component compatibility
-            const mappedData = (data || []).map(service => ({
-                ...service,
-                createdAt: service.created_at,
-                // Handle different potential relationship names
-                clientName: service.profiles?.full_name || 'Anonymous',
-                quotes: service.quotes?.map(quote => ({
-                    ...quote,
-                    createdAt: quote.created_at,
-                    providerName: quote.profiles?.full_name || 'Anonymous'
-                })) || []
-            }));
+            const mappedData = (data || []).map(service => {
+                if (!service) return null;
+                return {
+                    ...service,
+                    createdAt: service.created_at || new Date().toISOString(),
+                    title: service.title || 'Untitled Service',
+                    category: service.category || 'Other',
+                    description: service.description || '',
+                    clientName: service.profiles?.full_name || 'Anonymous',
+                    quotes: Array.isArray(service.quotes) ? service.quotes.map(quote => ({
+                        ...quote,
+                        createdAt: quote.created_at || new Date().toISOString(),
+                        providerName: quote.profiles?.full_name || quote.user_id?.substring(0, 8) || 'Anonymous'
+                    })) : []
+                };
+            }).filter(Boolean);
 
             console.log('Final Mapped Services:', mappedData);
-            console.log('Current Logged-in User ID:', user?.id);
-
             setServices(mappedData);
         } catch (error) {
             console.error('CRITICAL ERROR in fetchServices:', error);

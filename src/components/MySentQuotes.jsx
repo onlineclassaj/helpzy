@@ -15,11 +15,12 @@ const MySentQuotes = () => {
 
     const myQuotes = servicesWithQuotes.map(service => {
         const quote = service.quotes.find(q => q.user_id === user.id);
+        if (!quote) return null;
         return {
             service,
             quote
         };
-    });
+    }).filter(Boolean);
 
     if (myQuotes.length === 0) {
         return (
