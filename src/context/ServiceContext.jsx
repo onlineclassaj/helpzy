@@ -23,41 +23,44 @@ export const ServiceProvider = ({ children }) => {
     // Fetch services from Supabase
     const fetchServices = async () => {
         setLoading(true);
-        console.log('STABILIZATION: fetchServices START');
+        console.log('--- FETCH_SERVICES_FLUSH ---');
         try {
             if (!supabase) {
-                console.error('STABILIZATION: Supabase client is null');
+                console.error('Supabase client missing!');
                 setLoading(false);
                 return;
             }
 
-            // Simple fetch without joins initially to prove stability
-            const { data, error } = await supabase
+            const { data: rawData, error: dbError } = await supabase
                 .from('services')
                 .select('*')
                 .order('created_at', { ascending: false });
 
-            if (error) {
-                console.error('STABILIZATION: Supabase error:', error);
-                throw error;
+            if (dbError) {
+                console.error('Database Error:', dbError);
+                throw dbError;
             }
 
-            console.log('STABILIZATION: Data received', data?.length);
+            console.log('Raw data fetched:', rawData?.length);
 
-            const mappedData = (data || []).map(s => ({
-                ...s,
-                createdAt: s.created_at || new Date().toISOString(),
-                title: s.title || 'Untitled Service',
-                category: s.category || 'Other',
-                description: s.description || '',
-                clientName: 'Anonymous',
-                quotes: []
-            }));
+            // Clean mapping with no duplicate declarations
+            const finalProcessedServices = (rawData || []).map(item => {
+                if (!item) return null;
+                return {
+                    ...item,
+                    createdAt: item.created_at || new Date().toISOString(),
+                    title: item.title || 'Untitled',
+                    category: item.category || 'Other',
+                    description: item.description || '',
+                    clientName: 'Client', // Placeholder for stabilization
+                    quotes: [] // Placeholder for stabilization
+                };
+            }).filter(Boolean);
 
-            console.log('STABILIZATION: Final Mapped Services:', mappedData);
-            setServices(mappedData);
-        } catch (error) {
-            console.error('CRITICAL ERROR in fetchServices:', error);
+            console.log('Final Proceesed Count:', finalProcessedServices.length);
+            setServices(finalProcessedServices);
+        } catch (err) {
+            console.error('Global Fetch Error:', err);
         } finally {
             setLoading(false);
         }
