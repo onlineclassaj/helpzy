@@ -47,28 +47,14 @@ export const ServiceProvider = ({ children }) => {
             const mappedData = (data || []).map(s => ({
                 ...s,
                 createdAt: s.created_at || new Date().toISOString(),
+                title: s.title || 'Untitled Service',
+                category: s.category || 'Other',
+                description: s.description || '',
                 clientName: 'Anonymous',
                 quotes: []
             }));
 
-            const mappedData = (data || []).map(service => {
-                if (!service) return null;
-                return {
-                    ...service,
-                    createdAt: service.created_at || new Date().toISOString(),
-                    title: service.title || 'Untitled Service',
-                    category: service.category || 'Other',
-                    description: service.description || '',
-                    clientName: service.profiles?.full_name || 'Anonymous',
-                    quotes: Array.isArray(service.quotes) ? service.quotes.map(quote => ({
-                        ...quote,
-                        createdAt: quote.created_at || new Date().toISOString(),
-                        providerName: quote.profiles?.full_name || quote.user_id?.substring(0, 8) || 'Anonymous'
-                    })) : []
-                };
-            }).filter(Boolean);
-
-            console.log('Final Mapped Services:', mappedData);
+            console.log('STABILIZATION: Final Mapped Services:', mappedData);
             setServices(mappedData);
         } catch (error) {
             console.error('CRITICAL ERROR in fetchServices:', error);
