@@ -32,7 +32,7 @@ const Navbar = () => {
                             H
                         </div>
                         Helpzy
-                        <span className="text-[10px] font-black bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-lg">V2.1</span>
+                        <span className="text-[10px] font-black bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-lg">V2.2 (DEBUG)</span>
                     </Link>
                 </div>
 
