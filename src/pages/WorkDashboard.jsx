@@ -9,6 +9,8 @@ import { ALL_SUB_CATEGORIES } from '../constants/categories';
 
 const WorkDashboard = () => {
     const { user, services, loading } = useServices();
+
+    console.log('WorkDashboard: Render', { loading, user: user?.id, servicesCount: services?.length });
     const [searchTerm, setSearchTerm] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('All');
 

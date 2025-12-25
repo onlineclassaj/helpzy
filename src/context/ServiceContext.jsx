@@ -22,6 +22,7 @@ export const ServiceProvider = ({ children }) => {
 
     // Fetch services from Supabase
     const fetchServices = async () => {
+        setLoading(true);
         try {
             if (!supabase) {
                 console.error('Supabase client is NULL. Check environment variables.');
@@ -126,24 +127,38 @@ export const ServiceProvider = ({ children }) => {
 
     // Initial fetch and session monitoring
     useEffect(() => {
+        if (!supabase) {
+            console.error('ServiceContext: Supabase client is null. Cannot initialize auth listeners.');
+            setLoading(false);
+            return;
+        }
+
+        console.log('ServiceContext: Initializing...');
+
         // Get initial session
         supabase.auth.getSession().then(({ data: { session } }) => {
+            console.log('ServiceContext: Initial session retrieved:', session?.user?.id || 'No user');
             setUser(session?.user ?? null);
             fetchServices();
             if (session?.user) fetchNotifications();
+        }).catch(err => {
+            console.error('ServiceContext: getSession Error:', err);
+            setLoading(false);
         });
 
         // Listen for auth changes
         const {
             data: { subscription },
         } = supabase.auth.onAuthStateChange((_event, session) => {
-            console.log('Auth event:', _event);
+            console.log('ServiceContext: Auth event fired:', _event, session?.user?.id || 'No user');
             setUser(session?.user ?? null);
             fetchServices(); // Refresh data on login/logout
             if (session?.user) fetchNotifications();
         });
 
-        return () => subscription.unsubscribe();
+        return () => {
+            if (subscription) subscription.unsubscribe();
+        };
     }, []);
 
     // Sign up with email
