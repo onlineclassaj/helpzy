@@ -1,5 +1,7 @@
+import React, { useState } from 'react';
 import { X, Send, CheckCircle, Paperclip } from 'lucide-react';
 import { useServices } from '../context/ServiceContext';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const QuoteModal = ({ isOpen, onClose, serviceId, serviceTitle }) => {
     const { addQuote, uploadFile } = useServices();
