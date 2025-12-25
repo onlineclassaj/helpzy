@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, CheckCircle } from 'lucide-react';
+import { X, Send, CheckCircle, Paperclip } from 'lucide-react';
 import { useServices } from '../context/ServiceContext';
 
 const QuoteModal = ({ isOpen, onClose, serviceId, serviceTitle }) => {
-    const { addQuote } = useServices();
+    const { addQuote, uploadFile } = useServices();
     const [amount, setAmount] = useState('');
     const [message, setMessage] = useState('');
+    const [attachment, setAttachment] = useState(null);
+    const [attachmentName, setAttachmentName] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setAttachment(file);
+            setAttachmentName(file.name);
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -18,21 +26,40 @@ const QuoteModal = ({ isOpen, onClose, serviceId, serviceTitle }) => {
         setLoading(true);
         setError('');
 
-        const result = await addQuote(serviceId, {
-            amount: parseFloat(amount),
-            message,
-        });
+        try {
+            let attachmentUrl = '';
+            if (attachment) {
+                const uploadResult = await uploadFile(attachment, 'quote-attachments');
+                if (uploadResult.success) {
+                    attachmentUrl = uploadResult.url;
+                } else {
+                    setError('Failed to upload attachment.');
+                    setLoading(false);
+                    return;
+                }
+            }
 
-        if (result.success) {
-            setSuccess(true);
-            setTimeout(() => {
-                setAmount('');
-                setMessage('');
-                setSuccess(false);
-                onClose();
-            }, 1500);
-        } else {
-            setError(result.message || 'Failed to send quote.');
+            const result = await addQuote(serviceId, {
+                amount: parseFloat(amount),
+                message,
+                attachment_url: attachmentUrl
+            });
+
+            if (result.success) {
+                setSuccess(true);
+                setTimeout(() => {
+                    setAmount('');
+                    setMessage('');
+                    setAttachment(null);
+                    setAttachmentName('');
+                    setSuccess(false);
+                    onClose();
+                }, 1500);
+            } else {
+                setError(result.message || 'Failed to send quote.');
+            }
+        } catch (err) {
+            setError('An error occurred.');
         }
         setLoading(false);
     };
@@ -89,7 +116,7 @@ const QuoteModal = ({ isOpen, onClose, serviceId, serviceTitle }) => {
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
                                 <textarea
-                                    rows="4"
+                                    rows="3"
                                     placeholder="Describe why you are the best fit..."
                                     value={message}
                                     onChange={(e) => setMessage(e.target.value)}
@@ -97,6 +124,28 @@ const QuoteModal = ({ isOpen, onClose, serviceId, serviceTitle }) => {
                                     required
                                     disabled={loading || success}
                                 ></textarea>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Attachment (Photo or PDF)</label>
+                                <div className="flex items-center gap-3">
+                                    <label className="flex items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
+                                        <Paperclip className="w-4 h-4 text-gray-500" />
+                                        <span className="text-sm text-gray-600">
+                                            {attachmentName ? attachmentName : 'Choose file'}
+                                        </span>
+                                        <input type="file" onChange={handleFileChange} className="hidden" accept="image/*,.pdf" />
+                                    </label>
+                                    {attachmentName && (
+                                        <button
+                                            type="button"
+                                            onClick={() => { setAttachment(null); setAttachmentName(''); }}
+                                            className="text-red-500 text-xs hover:underline"
+                                        >
+                                            Remove
+                                        </button>
+                                    )}
+                                </div>
                             </div>
 
                             <button

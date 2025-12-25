@@ -13,6 +13,8 @@ CREATE TABLE services (
   title TEXT NOT NULL,
   category TEXT NOT NULL,
   description TEXT,
+  location TEXT,
+  image_url TEXT,
   status TEXT DEFAULT 'active' NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
@@ -24,6 +26,19 @@ CREATE TABLE quotes (
   user_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
   amount NUMERIC NOT NULL,
   message TEXT,
+  attachment_url TEXT,
+  status TEXT DEFAULT 'pending' NOT NULL, -- pending, accepted, rejected
+  created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
+
+-- 4. Create Notifications table
+CREATE TABLE notifications (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+  title TEXT NOT NULL,
+  message TEXT NOT NULL,
+  link TEXT,
+  is_read BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
 
@@ -31,6 +46,7 @@ CREATE TABLE quotes (
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE services ENABLE ROW LEVEL SECURITY;
 ALTER TABLE quotes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies for Profiles
 CREATE POLICY "Public profiles are viewable by everyone" ON profiles FOR SELECT USING (true);
@@ -65,3 +81,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- RLS Policies for Notifications
+CREATE POLICY "Users can view their own notifications" ON notifications FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users can update their own notifications" ON notifications FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY "System can insert notifications" ON notifications FOR INSERT WITH CHECK (true); -- Or set more specific check if needed

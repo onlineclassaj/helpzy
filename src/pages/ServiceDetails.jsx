@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useServices } from '../context/ServiceContext';
-import { ArrowLeft, User, MessageSquare, Clock, Send } from 'lucide-react';
+import { ArrowLeft, User, MessageSquare, Clock, Send, MapPin, FileText, CheckCircle } from 'lucide-react';
 import QuoteModal from '../components/QuoteModal';
 
 const ServiceDetails = () => {
     const { id } = useParams();
-    const { services, user, loading } = useServices();
+    const { services, user, loading, acceptQuote } = useServices();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [acceptingId, setAcceptingId] = useState(null);
 
     if (loading) {
         return (
@@ -50,9 +51,17 @@ const ServiceDetails = () => {
                                 {service.category}
                             </span>
                             <h1 className="text-3xl font-bold text-gray-900 mb-2">{service.title}</h1>
-                            <div className="flex items-center text-gray-400 text-sm mb-4">
-                                <Clock className="w-4 h-4 mr-1" />
-                                Posted on {new Date(service.createdAt).toLocaleDateString()}
+                            <div className="flex flex-wrap items-center gap-4 text-gray-400 text-sm mb-4">
+                                <span className="flex items-center">
+                                    <Clock className="w-4 h-4 mr-1" />
+                                    Posted on {new Date(service.createdAt).toLocaleDateString()}
+                                </span>
+                                {service.location && (
+                                    <span className="flex items-center">
+                                        <MapPin className="w-4 h-4 mr-1" />
+                                        {service.location}
+                                    </span>
+                                )}
                             </div>
                         </div>
 
@@ -68,8 +77,23 @@ const ServiceDetails = () => {
                         )}
                     </div>
                     <div className="prose max-w-none text-gray-600 border-t border-gray-100 pt-6 mt-2">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-2">Description</h3>
-                        <p className="whitespace-pre-wrap">{service.description}</p>
+                        <div className="flex flex-col md:flex-row gap-8">
+                            <div className="flex-1">
+                                <h3 className="text-lg font-semibold text-gray-900 mb-2">Description</h3>
+                                <p className="whitespace-pre-wrap">{service.description}</p>
+                            </div>
+                            {service.image_url && (
+                                <div className="md:w-1/3">
+                                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Attachments</h3>
+                                    <img
+                                        src={service.image_url}
+                                        alt="Service"
+                                        className="w-full h-auto rounded-xl border border-gray-200 shadow-sm cursor-pointer hover:opacity-90 transition-opacity"
+                                        onClick={() => window.open(service.image_url, '_blank')}
+                                    />
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
 
@@ -111,10 +135,37 @@ const ServiceDetails = () => {
                                             {quote.amount}
                                         </div>
                                         <p className="text-xs text-gray-400 mb-4">Quoted Amount</p>
-                                        {isOwner && (
-                                            <button className="w-full bg-indigo-600 text-white font-medium py-2 rounded-lg hover:bg-indigo-700 transition-colors text-sm">
-                                                Accept Quote
+
+                                        {quote.attachment_url && (
+                                            <a
+                                                href={quote.attachment_url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-1.5 text-xs text-indigo-600 hover:text-indigo-800 mb-4 bg-indigo-50 px-2 py-1 rounded"
+                                            >
+                                                <FileText className="w-3 h-3" />
+                                                View Attachment
+                                            </a>
+                                        )}
+
+                                        {isOwner && service.status !== 'completed' && (
+                                            <button
+                                                onClick={async () => {
+                                                    setAcceptingId(quote.id);
+                                                    await acceptQuote(service.id, quote.id);
+                                                    setAcceptingId(null);
+                                                }}
+                                                disabled={acceptingId === quote.id}
+                                                className="w-full bg-indigo-600 text-white font-medium py-2 rounded-lg hover:bg-indigo-700 transition-colors text-sm disabled:opacity-50"
+                                            >
+                                                {acceptingId === quote.id ? "Accepting..." : "Accept Quote"}
                                             </button>
+                                        )}
+                                        {quote.status === 'accepted' && (
+                                            <div className="flex items-center gap-1 text-green-600 font-bold text-sm">
+                                                <CheckCircle className="w-4 h-4" />
+                                                Accepted
+                                            </div>
                                         )}
                                     </div>
                                 </div>

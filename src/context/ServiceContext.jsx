@@ -17,6 +17,8 @@ export const ServiceProvider = ({ children }) => {
 
     // Services state
     const [services, setServices] = useState([]);
+    const [notifications, setNotifications] = useState([]);
+    const [unreadCount, setUnreadCount] = useState(0);
 
     // Fetch services from Supabase
     const fetchServices = async () => {
@@ -65,12 +67,53 @@ export const ServiceProvider = ({ children }) => {
         }
     };
 
+    const fetchNotifications = async () => {
+        if (!user) return;
+        try {
+            const { data, error } = await supabase
+                .from('notifications')
+                .select('*')
+                .eq('user_id', user.id)
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            setNotifications(data || []);
+            setUnreadCount(data?.filter(n => !n.is_read).length || 0);
+        } catch (error) {
+            console.error('FetchNotifications Error:', error);
+        }
+    };
+
+    const markNotificationAsRead = async (id) => {
+        try {
+            const { error } = await supabase
+                .from('notifications')
+                .update({ is_read: true })
+                .eq('id', id);
+            if (error) throw error;
+            fetchNotifications();
+        } catch (error) {
+            console.error('MarkNotificationAsRead Error:', error);
+        }
+    };
+
+    const sendNotification = async (userId, title, message, link = '') => {
+        try {
+            await supabase
+                .from('notifications')
+                .insert({ user_id: userId, title, message, link });
+        } catch (error) {
+            console.error('SendNotification Error:', error);
+        }
+    };
+
     // Initial fetch and session monitoring
     useEffect(() => {
         // Get initial session
         supabase.auth.getSession().then(({ data: { session } }) => {
             setUser(session?.user ?? null);
             fetchServices();
+            if (session?.user) fetchNotifications();
         });
 
         // Listen for auth changes
@@ -80,6 +123,7 @@ export const ServiceProvider = ({ children }) => {
             console.log('Auth event:', _event);
             setUser(session?.user ?? null);
             fetchServices(); // Refresh data on login/logout
+            if (session?.user) fetchNotifications();
         });
 
         return () => subscription.unsubscribe();
@@ -159,6 +203,8 @@ export const ServiceProvider = ({ children }) => {
                     title: service.title,
                     category: service.category,
                     description: service.description,
+                    location: service.location,
+                    image_url: service.image_url,
                     user_id: user.id,
                 })
                 .select(); // Return the inserted data for verification
@@ -191,14 +237,91 @@ export const ServiceProvider = ({ children }) => {
                     user_id: user.id,
                     amount: quote.amount,
                     message: quote.message,
+                    attachment_url: quote.attachment_url,
                 });
 
             if (error) throw error;
+
+            // Notify service owner
+            const service = services.find(s => s.id === serviceId);
+            if (service) {
+                await sendNotification(
+                    service.user_id,
+                    'New Quote Received',
+                    `You received a new quote of ₹${quote.amount} for "${service.title}"`,
+                    `/service/${serviceId}`
+                );
+            }
 
             await fetchServices();
             return { success: true };
         } catch (error) {
             console.error('AddQuote Error:', error.message);
+            return { success: false, message: error.message };
+        }
+    };
+
+    const acceptQuote = async (serviceId, quoteId) => {
+        if (!user) return { success: false, message: 'Must be logged in' };
+
+        try {
+            // Update quote status
+            const { error: quoteError } = await supabase
+                .from('quotes')
+                .update({ status: 'accepted' })
+                .eq('id', quoteId);
+
+            if (quoteError) throw quoteError;
+
+            // Update service status
+            const { error: serviceError } = await supabase
+                .from('services')
+                .update({ status: 'completed' })
+                .eq('id', serviceId);
+
+            if (serviceError) throw serviceError;
+
+            // Notify provider
+            const service = services.find(s => s.id === serviceId);
+            const quote = service?.quotes.find(q => q.id === quoteId);
+            if (quote) {
+                await sendNotification(
+                    quote.user_id,
+                    'Quote Accepted!',
+                    `Your quote for "${service.title}" has been accepted.`,
+                    `/service/${serviceId}`
+                );
+            }
+
+            await fetchServices();
+            return { success: true };
+        } catch (error) {
+            console.error('AcceptQuote Error:', error.message);
+            return { success: false, message: error.message };
+        }
+    };
+
+    const uploadFile = async (file, bucket) => {
+        if (!user) return { success: false, message: 'Must be logged in' };
+
+        try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Math.random()}.${fileExt}`;
+            const filePath = `${user.id}/${fileName}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from(bucket)
+                .upload(filePath, file);
+
+            if (uploadError) throw uploadError;
+
+            const { data } = supabase.storage
+                .from(bucket)
+                .getPublicUrl(filePath);
+
+            return { success: true, url: data.publicUrl };
+        } catch (error) {
+            console.error('Upload Error:', error.message);
             return { success: false, message: error.message };
         }
     };
@@ -229,13 +352,19 @@ export const ServiceProvider = ({ children }) => {
             addService,
             deleteService,
             addQuote,
+            acceptQuote,
+            uploadFile,
+            notifications,
+            unreadCount,
+            markNotificationAsRead,
             user,
             login,
             signup,
             logout,
             resetPassword,
             loading,
-            refreshServices: fetchServices
+            refreshServices: fetchServices,
+            refreshNotifications: fetchNotifications
         }}>
             {children}
         </ServiceContext.Provider>

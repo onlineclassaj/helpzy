@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useServices } from '../context/ServiceContext';
-import { UserCircle, LogOut, Briefcase, User } from 'lucide-react';
+import { UserCircle, LogOut, Briefcase, User, Bell } from 'lucide-react';
+import NotificationCenter from './NotificationCenter';
 
 const Navbar = () => {
     const { user, logout } = useServices();
@@ -44,6 +45,8 @@ const Navbar = () => {
                                 </span>
                                 <span className="text-[10px] font-bold text-gray-400">VERIFIED PROFESSIONAL</span>
                             </div>
+                            <NotificationCenter />
+                            <div className="w-[1px] h-4 bg-gray-200 mx-1"></div>
                             <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center border border-gray-200">
                                 <User className="w-5 h-5 text-gray-400" />
                             </div>

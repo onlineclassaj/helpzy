@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Clock, ArrowRight, MessageSquare, Eye, Trash2 } from 'lucide-react';
+import { Clock, ArrowRight, MessageSquare, Eye, Trash2, MapPin } from 'lucide-react';
 import { useServices } from '../context/ServiceContext';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -42,7 +42,19 @@ const ServiceCard = ({ service, isOwner = false }) => {
                     <h3 className="text-2xl font-bold text-gray-900 leading-tight group-hover:text-indigo-600 transition-colors">
                         {service.title}
                     </h3>
+                    {service.location && (
+                        <div className="flex items-center text-gray-400 text-[10px] mt-2 font-medium">
+                            <MapPin className="w-3 h-3 mr-1 text-indigo-400" />
+                            {service.location}
+                        </div>
+                    )}
                 </div>
+
+                {service.image_url && (
+                    <div className="mb-6 rounded-2xl overflow-hidden h-32 border border-gray-100 relative z-10">
+                        <img src={service.image_url} alt={service.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    </div>
+                )}
 
                 <p className="text-gray-500 mb-8 line-clamp-3 text-sm leading-relaxed flex-grow relative z-10">
                     {service.description}

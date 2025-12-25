@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useServices } from '../context/ServiceContext';
 import ServiceCard from '../components/ServiceCard';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { ALL_SUB_CATEGORIES } from '../constants/categories';
 
@@ -9,6 +9,7 @@ const FindWork = () => {
     const { services, loading } = useServices();
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [locationFilter, setLocationFilter] = useState('');
 
     const categories = Array.isArray(ALL_SUB_CATEGORIES) ? ALL_SUB_CATEGORIES : ['All'];
 
@@ -17,7 +18,8 @@ const FindWork = () => {
         const matchesSearch = (service.title || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
             (service.description || "").toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = selectedCategory === 'All' || service.category === selectedCategory;
-        return matchesSearch && matchesCategory;
+        const matchesLocation = !locationFilter || (service.location || "").toLowerCase().includes(locationFilter.toLowerCase());
+        return matchesSearch && matchesCategory && matchesLocation;
     });
 
     return (
@@ -47,6 +49,17 @@ const FindWork = () => {
                                 className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </div>
+
+                        <div className="flex-1 relative">
+                            <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                            <input
+                                type="text"
+                                placeholder="Filter by location (e.g. Mumbai)..."
+                                className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                                value={locationFilter}
+                                onChange={(e) => setLocationFilter(e.target.value)}
                             />
                         </div>
 
