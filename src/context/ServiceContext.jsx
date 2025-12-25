@@ -23,7 +23,7 @@ export const ServiceProvider = ({ children }) => {
     // Fetch services from Supabase
     const fetchServices = async () => {
         setLoading(true);
-        console.log('--- FETCH_SERVICES_FLUSH ---');
+        console.log('--- FETCH_SERVICES_V2.2 ---');
         try {
             if (!supabase) {
                 console.error('Supabase client missing!');
@@ -31,20 +31,32 @@ export const ServiceProvider = ({ children }) => {
                 return;
             }
 
+            // Fetch services with profiles and quotes
             const { data: rawData, error: dbError } = await supabase
                 .from('services')
-                .select('*')
+                .select(`
+                    *,
+                    profiles (full_name),
+                    quotes (
+                        *,
+                        profiles (full_name)
+                    )
+                `)
                 .order('created_at', { ascending: false });
 
             if (dbError) {
-                console.error('Database Error:', dbError);
-                throw dbError;
+                console.error('Complex fetch failed, attempting simple fetch:', dbError);
+                // Fallback to simple fetch if joins fail
+                const { data: simpleData, error: simpleError } = await supabase
+                    .from('services')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (simpleError) throw simpleError;
+                rawData = simpleData;
             }
 
-            console.log('Raw data fetched:', rawData?.length);
-
-            // Clean mapping with no duplicate declarations
-            const finalProcessedServices = (rawData || []).map(item => {
+            const processed = (rawData || []).map(item => {
                 if (!item) return null;
                 return {
                     ...item,
@@ -52,13 +64,18 @@ export const ServiceProvider = ({ children }) => {
                     title: item.title || 'Untitled',
                     category: item.category || 'Other',
                     description: item.description || '',
-                    clientName: 'Client', // Placeholder for stabilization
-                    quotes: [] // Placeholder for stabilization
+                    location: item.location || 'Not specified',
+                    clientName: item.profiles?.full_name || 'Anonymous User',
+                    quotes: Array.isArray(item.quotes) ? item.quotes.map(q => ({
+                        ...q,
+                        createdAt: q.created_at || new Date().toISOString(),
+                        providerName: q.profiles?.full_name || 'Anonymous Provider'
+                    })) : []
                 };
             }).filter(Boolean);
 
-            console.log('Final Proceesed Count:', finalProcessedServices.length);
-            setServices(finalProcessedServices);
+            console.log('Processed Services Count:', processed.length);
+            setServices(processed);
         } catch (err) {
             console.error('Global Fetch Error:', err);
         } finally {

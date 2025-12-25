@@ -12,6 +12,7 @@ const WorkDashboard = () => {
 
     console.log('WorkDashboard: Render', { loading, user: user?.id, servicesCount: services?.length });
     const [searchTerm, setSearchTerm] = useState('');
+    const [locationSearch, setLocationSearch] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('All');
 
     if (loading) {
@@ -32,7 +33,8 @@ const WorkDashboard = () => {
         const matchesSearch = (service.title || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
             (service.description || "").toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = categoryFilter === 'All' || service.category === categoryFilter;
-        return matchesSearch && matchesCategory;
+        const matchesLocation = !locationSearch || (service.location || "").toLowerCase().includes(locationSearch.toLowerCase());
+        return matchesSearch && matchesCategory && matchesLocation;
     });
 
     const allCategories = Array.isArray(ALL_SUB_CATEGORIES) ? ALL_SUB_CATEGORIES : ['All'];
@@ -90,13 +92,26 @@ const WorkDashboard = () => {
                                     <option key={cat} value={cat}>{cat}</option>
                                 ))}
                             </select>
-                            <input
-                                type="text"
-                                placeholder="Search jobs..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="px-4 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 w-full md:w-64"
-                            />
+                            <div className="relative group">
+                                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
+                                <input
+                                    type="text"
+                                    placeholder="City or Area..."
+                                    value={locationSearch}
+                                    onChange={(e) => setLocationSearch(e.target.value)}
+                                    className="pl-9 pr-4 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 w-full md:w-48"
+                                />
+                            </div>
+                            <div className="relative group">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
+                                <input
+                                    type="text"
+                                    placeholder="Search jobs..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="pl-9 pr-4 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 w-full md:w-64"
+                                />
+                            </div>
                         </div>
                     </div>
 
