@@ -18,40 +18,60 @@ self.addEventListener('install', (event) => {
 
 // Fetch event - serve from cache, fallback to network
 self.addEventListener('fetch', (event) => {
-    // SECURITY FIX: Only cache http and https requests. 
-    // This prevents the "chrome-extension" error seen in console.
     const url = new URL(event.request.url);
+
+    // SECURITY FIX: Only handle http/https
     if (url.protocol !== 'http:' && url.protocol !== 'https:') {
         return;
     }
 
-    event.respondWith(
-        caches.match(event.request)
-            .then((response) => {
-                if (response) {
+    // NETWORK FIRST for index, html, and root to ensure updates are seen
+    const isHtml = event.request.mode === 'navigate' ||
+        url.pathname === '/' ||
+        url.pathname.endsWith('.html');
+
+    if (isHtml) {
+        event.respondWith(
+            fetch(event.request)
+                .then(response => {
+                    // Update cache with new version
+                    const responseClone = response.clone();
+                    caches.open(CACHE_NAME).then(cache => {
+                        cache.put(event.request, responseClone);
+                    });
                     return response;
-                }
-
-                const fetchRequest = event.request.clone();
-
-                return fetch(fetchRequest).then((response) => {
-                    if (!response || response.status !== 200 || response.type !== 'basic') {
+                })
+                .catch(() => {
+                    // Fallback to cache if offline
+                    return caches.match(event.request);
+                })
+        );
+    } else {
+        // CACHE FIRST for assets (JS, CSS, Images) as they have hashed filenames
+        event.respondWith(
+            caches.match(event.request)
+                .then((response) => {
+                    if (response) {
                         return response;
                     }
 
-                    const responseToCache = response.clone();
+                    const fetchRequest = event.request.clone();
 
-                    caches.open(CACHE_NAME)
-                        .then((cache) => {
+                    return fetch(fetchRequest).then((response) => {
+                        if (!response || response.status !== 200 || response.type !== 'basic') {
+                            return response;
+                        }
+
+                        const responseToCache = response.clone();
+                        caches.open(CACHE_NAME).then((cache) => {
                             cache.put(event.request, responseToCache);
                         });
 
-                    return response;
-                }).catch(() => {
-                    return caches.match('/');
-                });
-            })
-    );
+                        return response;
+                    });
+                })
+        );
+    }
 });
 
 // Activate event - clean up old caches

@@ -11,6 +11,11 @@ const UpdateNotification = () => {
             navigator.serviceWorker.ready.then((reg) => {
                 setRegistration(reg);
 
+                // Check if there's already a waiting worker from a previous load
+                if (reg.waiting) {
+                    setShowUpdate(true);
+                }
+
                 // Check for updates every 60 seconds
                 setInterval(() => {
                     reg.update();
