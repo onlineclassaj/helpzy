@@ -4,15 +4,14 @@ import { useServices } from '../context/ServiceContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const QuoteModal = ({ isOpen, onClose, serviceId, serviceTitle }) => {
-    console.log('--- QUOTE_MODAL_V2.2_INIT ---');
     const { addQuote, uploadFile } = useServices();
-    const [amount, setAmount] = useState('');
-    const [message, setMessage] = useState('');
-    const [attachment, setAttachment] = useState(null);
-    const [attachmentName, setAttachmentName] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState(false);
+    const [amount, setAmount] = React.useState('');
+    const [message, setMessage] = React.useState('');
+    const [attachment, setAttachment] = React.useState(null);
+    const [attachmentName, setAttachmentName] = React.useState('');
+    const [loading, setLoading] = React.useState(false);
+    const [error, setError] = React.useState('');
+    const [success, setSuccess] = React.useState(false);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];

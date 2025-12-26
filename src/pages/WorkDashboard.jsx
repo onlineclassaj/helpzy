@@ -1,145 +1,152 @@
 import React, { useState } from 'react';
 import { useServices } from '../context/ServiceContext';
 import { Navigate } from 'react-router-dom';
-import { Briefcase, Search } from 'lucide-react';
+import { Briefcase, Search, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ServiceCard from '../components/ServiceCard';
 import MySentQuotes from '../components/MySentQuotes';
 import { ALL_SUB_CATEGORIES } from '../constants/categories';
 
 const WorkDashboard = () => {
-    const { user, services, loading } = useServices();
-
-    console.log('WorkDashboard: Render', { loading, user: user?.id, servicesCount: services?.length });
+    const { services, user, loading } = useServices();
     const [searchTerm, setSearchTerm] = useState('');
     const [locationSearch, setLocationSearch] = useState('');
-    const [categoryFilter, setCategoryFilter] = useState('All');
+    const [selectedCategory, setSelectedCategory] = useState('All');
+    const [activeTab, setActiveTab] = useState('marketplace');
 
-    if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
-            </div>
-        );
-    }
+    if (!user) return <Navigate to="/login" />;
 
-    if (!user) {
-        return <Navigate to="/login" replace />;
-    }
+    const filteredServices = services.filter(service => {
+        const matchesCategory = selectedCategory === 'All' || service.category === selectedCategory;
+        const matchesSearch = service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            service.description.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesLocation = !locationSearch ||
+            (service.location && service.location.toLowerCase().includes(locationSearch.toLowerCase()));
 
-    // Filter for Marketplace Feed
-    const filteredServices = (services || []).filter(service => {
-        if (!service) return false;
-        const matchesSearch = (service.title || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (service.description || "").toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = categoryFilter === 'All' || service.category === categoryFilter;
-        const matchesLocation = !locationSearch || (service.location || "").toLowerCase().includes(locationSearch.toLowerCase());
-        return matchesSearch && matchesCategory && matchesLocation;
+        // Hide user's own services from marketplace but NOT from My Sent Quotes (which is a different list anyway)
+        const isNotOwnService = service.client_id !== user.id;
+
+        return matchesCategory && matchesSearch && matchesLocation && isNotOwnService;
     });
 
-    const allCategories = Array.isArray(ALL_SUB_CATEGORIES) ? ALL_SUB_CATEGORIES : ['All'];
-    const [activeTab, setActiveTab] = useState('browse'); // 'browse' or 'quotes'
-
     return (
-        <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.2 }}
-            className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative"
-        >
-            <div className="absolute top-0 left-0 w-64 h-64 bg-emerald-50/50 rounded-full blur-3xl -z-10 animate-blob"></div>
-
-            {/* Tab Navigation */}
-            <div className="flex bg-white/50 backdrop-blur-md p-1.5 rounded-[24px] border border-gray-100 mb-12 w-fit mx-auto sm:mx-0 premium-shadow">
-                <button
-                    onClick={() => setActiveTab('browse')}
-                    className={`py-3 px-8 text-sm font-black transition-all rounded-[18px] flex items-center gap-2 ${activeTab === 'browse'
-                        ? 'bg-gray-900 text-white shadow-lg shadow-gray-200'
-                        : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
-                        }`}
-                >
-                    <Search className="w-4 h-4" />
-                    Browse Jobs
-                </button>
-                <button
-                    onClick={() => setActiveTab('quotes')}
-                    className={`py-3 px-8 text-sm font-black transition-all rounded-[18px] flex items-center gap-2 ${activeTab === 'quotes'
-                        ? 'bg-gray-900 text-white shadow-lg shadow-gray-200'
-                        : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
-                        }`}
-                >
-                    <Briefcase className="w-4 h-4" />
-                    My Sent Quotes
-                </button>
-            </div>
-
-            {activeTab === 'browse' ? (
-                /* Marketplace Feed Section */
-                <div>
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                        <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                            Marketplace Feed
-                        </h2>
-                        {/* Search Filters for Feed */}
-                        <div className="flex gap-2">
-                            <select
-                                value={categoryFilter}
-                                onChange={(e) => setCategoryFilter(e.target.value)}
-                                className="px-4 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                            >
-                                {allCategories.map(cat => (
-                                    <option key={cat} value={cat}>{cat}</option>
-                                ))}
-                            </select>
-                            <div className="relative group">
-                                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
-                                <input
-                                    type="text"
-                                    placeholder="City or Area..."
-                                    value={locationSearch}
-                                    onChange={(e) => setLocationSearch(e.target.value)}
-                                    className="pl-9 pr-4 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 w-full md:w-48"
-                                />
-                            </div>
-                            <div className="relative group">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
-                                <input
-                                    type="text"
-                                    placeholder="Search jobs..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="pl-9 pr-4 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 w-full md:w-64"
-                                />
-                            </div>
-                        </div>
+        <div className="min-h-screen bg-gray-50 pt-20 pb-12">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Header Section */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                    <div>
+                        <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+                            <Briefcase className="text-indigo-600 w-8 h-8" />
+                            Work Dashboard
+                        </h1>
+                        <p className="text-gray-600 mt-1">Browse available opportunities or track your quotes</p>
                     </div>
 
-                    {filteredServices.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {filteredServices.map(service => (
-                                <ServiceCard key={service.id} service={service} isOwner={false} />
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="text-center py-12">
-                            <p className="text-gray-500">No active jobs found matching your criteria.</p>
-                        </div>
-                    )}
+                    <div className="flex bg-white rounded-xl p-1 shadow-sm border border-gray-200 w-fit">
+                        <button
+                            onClick={() => setActiveTab('marketplace')}
+                            className={`px-6 py-2 rounded-lg font-medium transition-all ${activeTab === 'marketplace'
+                                ? 'bg-indigo-600 text-white shadow-md'
+                                : 'text-gray-600 hover:bg-gray-50'
+                                }`}
+                        >
+                            Marketplace
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('quotes')}
+                            className={`px-6 py-2 rounded-lg font-medium transition-all ${activeTab === 'quotes'
+                                ? 'bg-indigo-600 text-white shadow-md'
+                                : 'text-gray-600 hover:bg-gray-50'
+                                }`}
+                        >
+                            My Sent Quotes
+                        </button>
+                    </div>
                 </div>
-            ) : (
-                /* My Sent Quotes Section */
-                <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                >
-                    <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                        Sent Quotes History
-                    </h2>
+
+                {activeTab === 'marketplace' ? (
+                    <div className="space-y-6">
+                        {/* Search and Filters */}
+                        <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                {/* Search Input */}
+                                <div className="relative group">
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
+                                    <input
+                                        type="text"
+                                        placeholder="Search services..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                                    />
+                                </div>
+
+                                {/* Location Search */}
+                                <div className="relative group">
+                                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
+                                    <input
+                                        type="text"
+                                        placeholder="Filter by city/location..."
+                                        value={locationSearch}
+                                        onChange={(e) => setLocationSearch(e.target.value)}
+                                        className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                                    />
+                                </div>
+
+                                {/* Category Select */}
+                                <select
+                                    value={selectedCategory}
+                                    onChange={(e) => setSelectedCategory(e.target.value)}
+                                    className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                                >
+                                    <option value="All">All Categories</option>
+                                    {ALL_SUB_CATEGORIES.map(cat => (
+                                        <option key={cat} value={cat}>{cat}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* Marketplace Feed */}
+                        {loading ? (
+                            <div className="flex flex-col items-center justify-center py-20 space-y-4">
+                                <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+                                <p className="text-gray-500 animate-pulse">Loading amazing opportunities...</p>
+                            </div>
+                        ) : filteredServices.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {filteredServices.map((service, index) => (
+                                    <motion.div
+                                        key={service.id}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: index * 0.05 }}
+                                    >
+                                        <ServiceCard service={service} />
+                                    </motion.div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-300">
+                                <div className="bg-gray-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <Search className="w-10 h-10 text-gray-300" />
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-900">No services found</h3>
+                                <p className="text-gray-500 mt-2">Try adjusting your search or filters to find more work.</p>
+                                <button
+                                    onClick={() => { setSearchTerm(''); setLocationSearch(''); setSelectedCategory('All'); }}
+                                    className="mt-6 text-indigo-600 font-semibold hover:underline"
+                                >
+                                    Clear all filters
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                ) : (
                     <MySentQuotes />
-                </motion.div>
-            )}
-        </motion.div>
+                )}
+            </div>
+        </div>
     );
 };
 
