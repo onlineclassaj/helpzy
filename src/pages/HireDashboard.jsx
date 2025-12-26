@@ -30,11 +30,11 @@ const HireDashboard = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.2 }}
-            className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-12 relative"
+            className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-32 pb-12 relative"
         >
             <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50/50 rounded-full blur-3xl -z-10 animate-blob"></div>
 
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12">
                 <h2 className="text-3xl font-black text-gray-900 flex items-center gap-3">
                     <div className="p-2 bg-indigo-600 rounded-xl">
                         <List className="w-6 h-6 text-white" />
