@@ -4,6 +4,7 @@ import { useServices } from '../context/ServiceContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const QuoteModal = ({ isOpen, onClose, serviceId, serviceTitle }) => {
+    console.log('--- QUOTE_MODAL_V2.2_INIT ---');
     const { addQuote, uploadFile } = useServices();
     const [amount, setAmount] = useState('');
     const [message, setMessage] = useState('');
