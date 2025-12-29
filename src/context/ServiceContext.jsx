@@ -23,7 +23,7 @@ export const ServiceProvider = ({ children }) => {
     // Fetch services from Supabase
     const fetchServices = async () => {
         setLoading(true);
-        console.log('--- FETCH_SERVICES_V3.0 (Robust) ---');
+        console.log('--- RECOVERY_FETCH_V2.3.1 (Multi-Step) ---');
         try {
             if (!supabase) {
                 console.error('Supabase client missing!');
@@ -31,30 +31,37 @@ export const ServiceProvider = ({ children }) => {
                 return;
             }
 
-            // 1. Fetch all services
+            // 1. Fetch raw services
             const { data: servicesData, error: sError } = await supabase
                 .from('services')
-                .select('*, profiles(full_name, rating)')
+                .select('*')
                 .order('created_at', { ascending: false });
 
             if (sError) throw sError;
 
-            // 2. Fetch all quotes (RLS will filter what the user can see)
+            // 2. Fetch raw quotes
             const { data: quotesData, error: qError } = await supabase
                 .from('quotes')
-                .select('*, profiles(full_name, rating)')
+                .select('*')
                 .order('created_at', { ascending: false });
 
             if (qError) {
-                console.warn('Quote fetch failed or limited:', qError);
+                console.warn('Quote fetch limited:', qError.message);
             }
 
-            // 3. Merge quotes into their respective services
+            // 3. Fetch raw profiles (needed for names)
+            const { data: profilesData, error: pError } = await supabase
+                .from('profiles')
+                .select('*');
+
+            if (pError) {
+                console.warn('Profile fetch limited:', pError.message);
+            }
+
+            // 4. Merge data in memory
             const processed = (servicesData || []).map(service => {
                 const serviceQuotes = (quotesData || []).filter(q => q.service_id === service.id);
-
-                // Handle profiles as object OR array (Supabase join quirk)
-                const clientProfile = Array.isArray(service.profiles) ? service.profiles[0] : service.profiles;
+                const clientProfile = (profilesData || []).find(p => p.id === service.user_id);
 
                 return {
                     ...service,
@@ -66,7 +73,7 @@ export const ServiceProvider = ({ children }) => {
                     clientName: clientProfile?.full_name || 'Anonymous User',
                     clientRating: clientProfile?.rating || 0,
                     quotes: serviceQuotes.map(q => {
-                        const providerProfile = Array.isArray(q.profiles) ? q.profiles[0] : q.profiles;
+                        const providerProfile = (profilesData || []).find(p => p.id === q.user_id);
                         return {
                             ...q,
                             createdAt: q.created_at || new Date().toISOString(),
@@ -77,10 +84,10 @@ export const ServiceProvider = ({ children }) => {
                 };
             });
 
-            console.log(`Processed ${processed.length} services with merged quotes.`);
+            console.log(`Successfully merged ${processed.length} services from raw table data.`);
             setServices(processed);
         } catch (err) {
-            console.error('Global Fetch Error:', err);
+            console.error('Data Recovery Error:', err.message);
         } finally {
             setLoading(false);
         }

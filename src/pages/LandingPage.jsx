@@ -3,6 +3,7 @@ import { ArrowRight, Search, Briefcase, Star, Shield, Clock } from 'lucide-react
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useServices } from '../context/ServiceContext';
+import { APP_VERSION } from '../constants/version';
 
 const LandingPage = () => {
     const { user } = useServices();
@@ -30,7 +31,7 @@ const LandingPage = () => {
                             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/50 backdrop-blur-md border border-white/50 shadow-sm mb-8"
                         >
                             <span className="flex h-2 w-2 rounded-full bg-indigo-600 animate-pulse"></span>
-                            <span className="text-sm font-bold text-gray-600 tracking-wide uppercase">Helpzy v2.1 • Next Gen Marketplace</span>
+                            <span className="text-sm font-bold text-gray-600 tracking-wide uppercase">Helpzy v{APP_VERSION} • Next Gen Marketplace</span>
                         </motion.div>
 
                         <motion.h1
