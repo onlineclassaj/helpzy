@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, MessageSquare, MapPin, ChevronRight } from 'lucide-react';
+import { Clock, MessageSquare, MapPin, Trash2, Eye } from 'lucide-react';
 import { useServices } from '../context/ServiceContext';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -13,11 +13,11 @@ const ServiceCard = ({ service, isOwner = false }) => {
 
     const handleDelete = async (e) => {
         e.stopPropagation();
-        if (window.confirm('Are you sure you want to delete this job post? This action cannot be undone.')) {
+        if (window.confirm('Are you sure you want to delete this job post?')) {
             setIsDeleting(true);
             const result = await deleteService(service.id);
             if (!result.success) {
-                alert(result.message || 'Failed to delete service.');
+                alert(result.message || 'Failed to delete.');
                 setIsDeleting(false);
             }
         }
@@ -32,92 +32,123 @@ const ServiceCard = ({ service, isOwner = false }) => {
         setIsModalOpen(true);
     };
 
+    const handleViewQuotes = (e) => {
+        e.stopPropagation();
+        navigate(`/service/${service.id}`);
+    };
+
     const quoteCount = service.quotes ? service.quotes.length : 0;
 
     return (
         <>
             <motion.div
-                initial={{ opacity: 0, y: 8 }}
+                initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
-                whileHover={{ y: -2, transition: { duration: 0.1 } }}
-                whileTap={{ scale: 0.99 }}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.995 }}
                 onClick={handleCardClick}
-                className="bg-white border border-gray-200/80 hover:border-indigo-200 p-3 sm:p-4 rounded-xl group relative overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all duration-200"
+                className="bg-white border border-gray-200 hover:border-indigo-300 p-3 rounded-xl cursor-pointer shadow-sm hover:shadow-md transition-all duration-150"
             >
-                {/* Compact Layout: Category + Title + Location | Date on right */}
-                <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                        {/* Category Badge */}
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wide bg-indigo-100 text-indigo-700 mb-1.5">
-                            {service.category}
-                        </span>
-
-                        {/* Title */}
-                        <h3 className="text-sm sm:text-base font-semibold text-gray-900 leading-snug group-hover:text-indigo-600 transition-colors line-clamp-1">
-                            {service.title}
-                        </h3>
-
-                        {/* Location */}
-                        {service.location && (
-                            <div className="flex items-center text-gray-500 text-xs mt-1">
-                                <MapPin className="w-3 h-3 mr-1 text-gray-400" />
-                                <span className="truncate">{service.location}</span>
+                {isOwner ? (
+                    /* ===== OWNER VIEW (My Active Requests) ===== */
+                    <>
+                        {/* Top Row: Date left, Delete right */}
+                        <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center text-gray-400 text-[10px] font-medium">
+                                <Clock className="w-3 h-3 mr-1" />
+                                {new Date(service.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                             </div>
-                        )}
-                    </div>
-
-                    {/* Date - Right aligned */}
-                    <div className="flex flex-col items-end flex-shrink-0">
-                        <div className="flex items-center text-gray-400 text-[10px] font-medium">
-                            <Clock className="w-3 h-3 mr-1" />
-                            {new Date(service.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                        </div>
-                        {quoteCount > 0 && (
-                            <span className="mt-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
-                                {quoteCount} quote{quoteCount !== 1 ? 's' : ''}
-                            </span>
-                        )}
-                    </div>
-                </div>
-
-                {/* Action Bar */}
-                <div className="flex items-center gap-2 mt-3 pt-2 border-t border-gray-100">
-                    {isOwner ? (
-                        <>
-                            <button
-                                onClick={handleCardClick}
-                                className="flex-1 bg-gray-900 text-white text-xs font-bold py-2 rounded-lg hover:bg-black transition-all flex items-center justify-center gap-1"
-                            >
-                                View Quotes
-                                <ChevronRight className="w-3.5 h-3.5" />
-                            </button>
                             <button
                                 onClick={handleDelete}
                                 disabled={isDeleting}
-                                className="px-3 py-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg hover:bg-rose-100 transition-colors disabled:opacity-50"
+                                className="p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors disabled:opacity-50"
+                                title="Delete"
                             >
-                                {isDeleting ? '...' : 'Delete'}
+                                {isDeleting ? (
+                                    <div className="w-3.5 h-3.5 border-2 border-gray-400 border-t-transparent animate-spin rounded-full" />
+                                ) : (
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                )}
                             </button>
-                        </>
-                    ) : (
-                        <>
+                        </div>
+
+                        {/* Content */}
+                        <div className="mb-2">
+                            <span className="inline-block px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide bg-indigo-100 text-indigo-700 mb-1">
+                                {service.category}
+                            </span>
+                            <h3 className="text-sm font-semibold text-gray-900 leading-snug line-clamp-1">
+                                {service.title}
+                            </h3>
+                            {service.location && (
+                                <div className="flex items-center text-gray-500 text-[10px] mt-0.5">
+                                    <MapPin className="w-2.5 h-2.5 mr-0.5" />
+                                    <span className="truncate">{service.location}</span>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Bottom Row: Quote count left, View button right */}
+                        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                            {quoteCount > 0 ? (
+                                <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
+                                    {quoteCount} quote{quoteCount !== 1 ? 's' : ''} received
+                                </span>
+                            ) : (
+                                <span className="text-[10px] text-gray-400">No quotes yet</span>
+                            )}
+                            <button
+                                onClick={handleViewQuotes}
+                                className="flex items-center gap-1 px-3 py-1.5 bg-indigo-600 text-white text-[10px] font-bold rounded-lg hover:bg-indigo-700 transition-colors"
+                            >
+                                <Eye className="w-3 h-3" />
+                                View
+                            </button>
+                        </div>
+                    </>
+                ) : (
+                    /* ===== WORKER VIEW (I Want to Work) ===== */
+                    <>
+                        {/* Main Content Row */}
+                        <div className="flex items-start gap-3">
+                            {/* Left: Info stack */}
+                            <div className="flex-1 min-w-0">
+                                <span className="inline-block px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide bg-indigo-100 text-indigo-700 mb-1">
+                                    {service.category}
+                                </span>
+                                <h3 className="text-sm font-semibold text-gray-900 leading-snug line-clamp-1">
+                                    {service.title}
+                                </h3>
+                                {service.location && (
+                                    <div className="flex items-center text-gray-500 text-[10px] mt-0.5">
+                                        <MapPin className="w-2.5 h-2.5 mr-0.5" />
+                                        <span className="truncate">{service.location}</span>
+                                    </div>
+                                )}
+                                <div className="flex items-center gap-2 mt-1.5 text-[10px] text-gray-400">
+                                    <span className="flex items-center">
+                                        <Clock className="w-2.5 h-2.5 mr-0.5" />
+                                        {new Date(service.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                                    </span>
+                                    {quoteCount > 0 && (
+                                        <span className="text-emerald-600 font-medium">
+                                            • {quoteCount} quote{quoteCount !== 1 ? 's' : ''}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Right: Send Quote button (compact) */}
                             <button
                                 onClick={handleQuoteClick}
-                                className="flex-1 premium-gradient text-white text-xs font-bold py-2 rounded-lg hover:opacity-90 transition-all flex items-center justify-center gap-1"
+                                className="flex-shrink-0 flex items-center gap-1 px-3 py-2 premium-gradient text-white text-[10px] font-bold rounded-lg hover:opacity-90 transition-all shadow-sm"
                             >
-                                <MessageSquare className="w-3.5 h-3.5" />
-                                Send Quote
+                                <MessageSquare className="w-3 h-3" />
+                                Quote
                             </button>
-                            <button
-                                onClick={handleCardClick}
-                                className="px-3 py-2 bg-gray-100 text-gray-600 text-xs font-bold rounded-lg hover:bg-indigo-50 hover:text-indigo-600 transition-all flex items-center gap-1"
-                            >
-                                Details
-                                <ChevronRight className="w-3.5 h-3.5" />
-                            </button>
-                        </>
-                    )}
-                </div>
+                        </div>
+                    </>
+                )}
             </motion.div>
 
             <QuoteModal
