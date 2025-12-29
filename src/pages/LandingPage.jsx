@@ -14,7 +14,7 @@ const LandingPage = () => {
     return (
         <div className="min-h-screen bg-slate-50 overflow-x-hidden">
             {/* Hero Section */}
-            <section className="relative pt-24 pb-24 lg:pt-32 lg:pb-32 overflow-hidden">
+            <section className="relative pt-28 pb-24 lg:pt-36 lg:pb-32 overflow-hidden">
                 {/* Animated Background Blobs */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none overflow-hidden">
                     <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-200/40 rounded-full mix-blend-multiply filter blur-[120px] animate-blob"></div>
@@ -24,12 +24,12 @@ const LandingPage = () => {
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="text-center">
-                        {/* 1. Main Branding - Moved Up */}
+                        {/* 1. Main Branding - Moved Down Slightly */}
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.7 }}
-                            className="mb-4"
+                            className="mb-8"
                         >
                             <h1 className="text-6xl sm:text-8xl font-black text-gray-900 tracking-tighter flex flex-col items-center justify-center gap-2">
                                 <span className="premium-gradient text-transparent bg-clip-text drop-shadow-sm">HELPZY</span>
