@@ -70,7 +70,7 @@ const LandingPage = () => {
                                 <motion.div
                                     whileHover={{ scale: 1.03, y: -4 }}
                                     whileTap={{ scale: 0.98 }}
-                                    className="bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-700 text-white p-6 sm:p-8 rounded-3xl shadow-2xl hover:shadow-indigo-300/50 transition-all duration-300 relative overflow-hidden h-full min-h-[200px] sm:min-h-[220px] flex flex-col"
+                                    className="bg-gradient-to-br from-teal-500 via-emerald-500 to-cyan-600 text-white p-6 sm:p-8 rounded-3xl shadow-2xl hover:shadow-teal-300/50 transition-all duration-300 relative overflow-hidden h-full min-h-[200px] sm:min-h-[220px] flex flex-col"
                                 >
                                     <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-8 translate-x-8 group-hover:scale-150 transition-transform duration-500"></div>
                                     <div className="relative z-10 flex flex-col flex-1">
@@ -78,8 +78,8 @@ const LandingPage = () => {
                                             <Search className="w-6 h-6 text-white" />
                                         </div>
                                         <h3 className="text-xl sm:text-2xl font-black mb-2">I want to Hire</h3>
-                                        <p className="text-sm text-white/80 mb-4 flex-1">Post a task and get quotes from professionals</p>
-                                        <div className="flex items-center text-xs font-bold text-white/60 group-hover:text-white transition-colors">
+                                        <p className="text-sm text-white/90 mb-4 flex-1">Post a task and get quotes from professionals</p>
+                                        <div className="flex items-center text-xs font-bold text-white/70 group-hover:text-white transition-colors">
                                             <span>GET STARTED</span>
                                             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                                         </div>
@@ -92,16 +92,16 @@ const LandingPage = () => {
                                 <motion.div
                                     whileHover={{ scale: 1.03, y: -4 }}
                                     whileTap={{ scale: 0.98 }}
-                                    className="bg-gradient-to-br from-sky-500 via-blue-600 to-indigo-600 text-white p-6 sm:p-8 rounded-3xl shadow-2xl hover:shadow-sky-400/50 transition-all duration-300 relative overflow-hidden h-full min-h-[200px] sm:min-h-[220px] flex flex-col"
+                                    className="bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-700 text-white p-6 sm:p-8 rounded-3xl shadow-2xl hover:shadow-purple-400/50 transition-all duration-300 relative overflow-hidden h-full min-h-[200px] sm:min-h-[220px] flex flex-col"
                                 >
-                                    <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full -translate-y-8 translate-x-8 group-hover:scale-150 transition-transform duration-500"></div>
+                                    <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-8 translate-x-8 group-hover:scale-150 transition-transform duration-500"></div>
                                     <div className="relative z-10 flex flex-col flex-1">
                                         <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-white/30 transition-colors">
                                             <Briefcase className="w-6 h-6 text-white" />
                                         </div>
                                         <h3 className="text-xl sm:text-2xl font-black mb-2">I want to Work</h3>
-                                        <p className="text-sm text-blue-50/90 mb-4 flex-1">Browse jobs and start earning today</p>
-                                        <div className="flex items-center text-xs font-bold text-white/80 group-hover:text-white transition-colors">
+                                        <p className="text-sm text-white/90 mb-4 flex-1">Browse jobs and start earning today</p>
+                                        <div className="flex items-center text-xs font-bold text-white/70 group-hover:text-white transition-colors">
                                             <span>FIND JOBS</span>
                                             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                                         </div>
@@ -123,7 +123,7 @@ const LandingPage = () => {
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                         {/* Clients Column */}
-                        <div className="space-y-8">
+                        <div className="space-y-8 bg-slate-50 rounded-[32px] p-8 sm:p-10 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                             <div className="flex items-center gap-4 mb-6">
                                 <div className="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg">
                                     <Search className="w-6 h-6" />
@@ -136,7 +136,7 @@ const LandingPage = () => {
                                 { step: "03", title: "Get Results", desc: "Accept the best quote and get your service completed." }
                             ].map((item, idx) => (
                                 <motion.div key={idx} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.1 }} className="flex gap-6 items-start group">
-                                    <span className="text-4xl font-black text-indigo-100 group-hover:text-indigo-200 transition-colors uppercase italic">{item.step}</span>
+                                    <span className="text-4xl font-black text-indigo-200 group-hover:text-indigo-300 transition-colors uppercase italic">{item.step}</span>
                                     <div>
                                         <h4 className="text-lg font-bold text-gray-900 mb-1">{item.title}</h4>
                                         <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
@@ -146,7 +146,7 @@ const LandingPage = () => {
                         </div>
 
                         {/* Providers Column */}
-                        <div className="space-y-8">
+                        <div className="space-y-8 bg-slate-50 rounded-[32px] p-8 sm:p-10 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                             <div className="flex items-center gap-4 mb-6">
                                 <div className="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center text-white shadow-lg">
                                     <Briefcase className="w-6 h-6" />
@@ -159,7 +159,7 @@ const LandingPage = () => {
                                 { step: "03", title: "Start Earning", desc: "Get hired and build your reputation with premium clients." }
                             ].map((item, idx) => (
                                 <motion.div key={idx} initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.1 }} className="flex gap-6 items-start group">
-                                    <span className="text-4xl font-black text-purple-100 group-hover:text-purple-200 transition-colors uppercase italic">{item.step}</span>
+                                    <span className="text-4xl font-black text-purple-200 group-hover:text-purple-300 transition-colors uppercase italic">{item.step}</span>
                                     <div>
                                         <h4 className="text-lg font-bold text-gray-900 mb-1">{item.title}</h4>
                                         <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
@@ -181,28 +181,31 @@ const LandingPage = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {[
-                            { icon: Shield, title: "Secure Workflow", desc: "End-to-end encryption for your data and secure communication channels.", color: "bg-indigo-50 text-indigo-600 border border-indigo-100" },
-                            { icon: Star, title: "Verified Ratings", desc: "Every professional is rated by real clients, ensuring the highest standards.", color: "bg-amber-50 text-amber-600 border border-amber-100" },
-                            { icon: ArrowRight, title: "Transparent Pricing", desc: "No hidden fees. Compare quotes and know exactly what you’ll pay.", color: "bg-emerald-50 text-emerald-600 border border-emerald-100" },
-                            { icon: Clock, title: "Real-time Alerts", desc: "Get notified instantly when you receive a quote or an acceptance.", color: "bg-blue-50 text-blue-600 border border-blue-100" },
-                            { icon: Search, title: "Smart Filtering", desc: "Filter by price, category, and rating to find the perfect match.", color: "bg-purple-50 text-purple-600 border border-purple-100" },
-                            { icon: CheckCircle, title: "Quality Guarantee", desc: "We strive to maintain a premium pool of talent for your peace of mind.", color: "bg-rose-50 text-rose-600 border border-rose-100" }
-                        ].map((feature, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.1 }}
-                                viewport={{ once: true }}
-                                className={`p-10 rounded-[32px] group hover:scale-[1.02] transition-all shadow-sm hover:shadow-md ${feature.color}`}
-                            >
-                                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 transform group-hover:rotate-6 transition-transform shadow-sm">
-                                    <feature.icon className="w-8 h-8" />
-                                </div>
-                                <h3 className="text-2xl font-bold mb-4 text-gray-900">{feature.title}</h3>
-                                <p className="text-gray-600 leading-relaxed text-sm lg:text-base font-medium">{feature.desc}</p>
-                            </motion.div>
-                        ))}
+                            {
+                                [
+                                { icon: Shield, title: "Secure Workflow", desc: "End-to-end encryption for your data and secure communication channels.", color: "bg-indigo-100 text-indigo-700 border border-indigo-200" },
+                                { icon: Star, title: "Verified Ratings", desc: "Every professional is rated by real clients, ensuring the highest standards.", color: "bg-amber-100 text-amber-700 border border-amber-200" },
+                                { icon: ArrowRight, title: "Transparent Pricing", desc: "No hidden fees. Compare quotes and know exactly what you’ll pay.", color: "bg-emerald-100 text-emerald-700 border border-emerald-200" },
+                                { icon: Clock, title: "Real-time Alerts", desc: "Get notified instantly when you receive a quote or an acceptance.", color: "bg-blue-100 text-blue-700 border border-blue-200" },
+                                { icon: Search, title: "Smart Filtering", desc: "Filter by price, category, and rating to find the perfect match.", color: "bg-purple-100 text-purple-700 border border-purple-200" },
+                                { icon: CheckCircle, title: "Quality Guarantee", desc: "We strive to maintain a premium pool of talent for your peace of mind.", color: "bg-rose-100 text-rose-700 border border-rose-200" }
+                                ].map((feature, index) => (
+                                    <motion.div
+                                        key={index}
+                                        initial={{ opacity: 0, y: 30 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: index * 0.1 }}
+                                        viewport={{ once: true }}
+                                        className={`p-10 rounded-[32px] group hover:scale-[1.02] transition-all shadow-sm hover:shadow-md ${feature.color}`}
+                                    >
+                                        <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 transform group-hover:rotate-6 transition-transform shadow-sm">
+                                            <feature.icon className="w-8 h-8" />
+                                        </div>
+                                        <h3 className="text-2xl font-bold mb-4 text-gray-900">{feature.title}</h3>
+                                        <p className="text-gray-600 leading-relaxed text-sm lg:text-base font-medium">{feature.desc}</p>
+                                    </motion.div>
+                                ))
+                            }
                     </div>
                 </div>
             </section>

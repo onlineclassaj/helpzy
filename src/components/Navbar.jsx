@@ -54,7 +54,7 @@ const Navbar = () => {
 
                 <div className="flex items-center gap-2 sm:gap-4">
                     {user ? (
-                        <div className="flex items-center gap-2 sm:gap-3">
+                        <div className="flex items-center gap-2 sm:gap-3 relative">
                             {isHomePage && (
                                 <div className="hidden md:flex flex-col items-end">
                                     <span className="text-xs font-black text-gray-900 uppercase tracking-tighter">
@@ -65,24 +65,46 @@ const Navbar = () => {
                             )}
                             <NotificationCenter />
                             <div className="hidden xs:block w-[1px] h-6 bg-gray-200 mx-1"></div>
-                            <Link
-                                to="/profile"
-                                className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-100 hover:bg-indigo-50 rounded-xl sm:rounded-2xl flex items-center justify-center border border-gray-200 hover:border-indigo-200 transition-colors"
-                                title="View Profile"
-                            >
-                                <User className="w-5 h-5 sm:w-6 sm:h-6 text-gray-500" />
-                            </Link>
-                            {isHomePage && (
-                                <>
-                                    <div className="w-[1px] h-6 bg-gray-200 mx-1"></div>
+
+                            {/* Profile Dropdown for Home Page */}
+                            {isHomePage ? (
+                                <div className="relative group">
                                     <button
-                                        onClick={handleLogout}
-                                        className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 hover:text-rose-600 hover:bg-rose-50 transition-all rounded-xl sm:rounded-2xl flex items-center justify-center"
-                                        title="Logout"
+                                        className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-100 hover:bg-indigo-50 rounded-xl sm:rounded-2xl flex items-center justify-center border border-gray-200 hover:border-indigo-200 transition-colors"
                                     >
-                                        <LogOut className="w-5 h-5 sm:w-6 sm:h-6" />
+                                        <User className="w-5 h-5 sm:w-6 sm:h-6 text-gray-500" />
                                     </button>
-                                </>
+
+                                    {/* Dropdown Menu */}
+                                    <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden transform opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 origin-top-right z-50">
+                                        <div className="py-2">
+                                            <Link
+                                                to="/profile"
+                                                className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors"
+                                            >
+                                                <User className="w-4 h-4" />
+                                                My Profile
+                                            </Link>
+                                            <div className="h-[1px] bg-gray-100 my-1"></div>
+                                            <button
+                                                onClick={handleLogout}
+                                                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-rose-600 hover:bg-rose-50 transition-colors"
+                                            >
+                                                <LogOut className="w-4 h-4" />
+                                                Sign Out
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                // Standard Profile Link for Non-Home Pages
+                                <Link
+                                    to="/profile"
+                                    className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-100 hover:bg-indigo-50 rounded-xl sm:rounded-2xl flex items-center justify-center border border-gray-200 hover:border-indigo-200 transition-colors"
+                                    title="View Profile"
+                                >
+                                    <User className="w-5 h-5 sm:w-6 sm:h-6 text-gray-500" />
+                                </Link>
                             )}
                         </div>
                     ) : (
