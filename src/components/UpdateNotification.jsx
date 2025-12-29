@@ -9,37 +9,38 @@ const UpdateNotification = () => {
     const [isForced, setIsForced] = useState(false);
 
     useEffect(() => {
-        console.log(`[UpdateNotification] Current version: ${APP_VERSION}`);
+        // Helper: Parse version string to check if remote > local
+        const isNewerVersion = (remote, local) => {
+            if (!remote || !local) return false;
+            const rParts = remote.split('.').map(Number);
+            const lParts = local.split('.').map(Number);
+
+            for (let i = 0; i < 3; i++) {
+                if (rParts[i] > lParts[i]) return true;
+                if (rParts[i] < lParts[i]) return false;
+            }
+            return false;
+        };
 
         // 1. Service Worker Update Logic
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.ready.then((reg) => {
                 setRegistration(reg);
+                if (reg.waiting) setShowUpdate(true);
 
-                // Check if there's already a waiting worker from a previous load
-                if (reg.waiting) {
-                    setShowUpdate(true);
-                }
+                // Check for updates every 60 seconds
+                setInterval(() => reg.update(), 60000);
 
-                // Check for updates every 30 seconds (more aggressive)
-                setInterval(() => {
-                    reg.update();
-                }, 30000);
-
-                // Listen for new service worker waiting
                 reg.addEventListener('updatefound', () => {
                     const newWorker = reg.installing;
-
                     newWorker.addEventListener('statechange', () => {
                         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            // New service worker available
                             setShowUpdate(true);
                         }
                     });
                 });
             });
 
-            // Listen for controller change (new SW activated)
             let refreshing = false;
             navigator.serviceWorker.addEventListener('controllerchange', () => {
                 if (!refreshing) {
@@ -49,29 +50,35 @@ const UpdateNotification = () => {
             });
         }
 
-        // 2. CRITICAL: Version Mismatch Detection
+        // 2. Client-Side Version Check (Prevent Loop)
         const checkVersion = async () => {
             try {
+                // Check session storage first
+                if (sessionStorage.getItem('helpzy_update_dismissed') === APP_VERSION) {
+                    return;
+                }
+
                 const response = await fetch(`/version.json?t=${Date.now()}`, { cache: 'no-store' });
                 const data = await response.json();
 
                 if (data.version && data.version !== APP_VERSION) {
-                    console.warn(`[UpdateNotification] VERSION MISMATCH! Local: ${APP_VERSION}, Server: ${data.version}`);
-                    setShowUpdate(true);
-                    // If we're more than 1 minor version behind, force the update
-                    const localParts = APP_VERSION.split('.').map(Number);
-                    const serverParts = data.version.split('.').map(Number);
-                    if (serverParts[1] > localParts[1] || serverParts[0] > localParts[0]) {
-                        setIsForced(true);
+                    if (isNewerVersion(data.version, APP_VERSION)) {
+                        console.log(`[UpdateNotification] New version available: ${data.version}`);
+                        setShowUpdate(true);
+
+                        // Force update only for major version mismatch
+                        const localMajor = parseInt(APP_VERSION.split('.')[0]);
+                        const remoteMajor = parseInt(data.version.split('.')[0]);
+                        if (remoteMajor > localMajor) setIsForced(true);
                     }
                 }
             } catch (err) {
-                console.warn('[UpdateNotification] Version check failed:', err);
+                // Silent fail for network errors
             }
         };
 
-        const interval = setInterval(checkVersion, 30000); // Check every 30 seconds
-        checkVersion(); // Initial check on mount
+        const interval = setInterval(checkVersion, 60000); // Check every minute
+        checkVersion(); // Initial check
 
         return () => clearInterval(interval);
     }, []);
@@ -89,6 +96,7 @@ const UpdateNotification = () => {
     const handleDismiss = () => {
         if (!isForced) {
             setShowUpdate(false);
+            sessionStorage.setItem('helpzy_update_dismissed', APP_VERSION);
         }
     };
 
