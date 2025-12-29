@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Search, Briefcase, Star, Shield, Clock } from 'lucide-react';
+import { ArrowRight, Search, Briefcase, Star, Shield, Clock, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useServices } from '../context/ServiceContext';
@@ -24,16 +24,6 @@ const LandingPage = () => {
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="text-center">
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.5 }}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/50 backdrop-blur-md border border-white/50 shadow-sm mb-8"
-                        >
-                            <span className="flex h-2 w-2 rounded-full bg-indigo-600 animate-pulse"></span>
-                            <span className="text-sm font-bold text-gray-600 tracking-wide uppercase">Helpzy v{APP_VERSION} • Next Gen Marketplace</span>
-                        </motion.div>
-
                         <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -75,14 +65,80 @@ const LandingPage = () => {
                 </div>
             </section>
 
-            {/* Feature Section */}
-            <section className="py-24 relative">
+            {/* How It Works Section */}
+            <section className="py-24 bg-white relative overflow-hidden">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div className="text-center mb-16">
+                        <h2 className="text-4xl font-black text-gray-900 mb-4">How Helpzy Works</h2>
+                        <p className="text-gray-500 max-w-2xl mx-auto text-lg">Connecting skilled professionals with clients who need tasks done, all in one seamless platform.</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        {/* Clients Column */}
+                        <div className="space-y-8">
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+                                    <Search className="w-6 h-6" />
+                                </div>
+                                <h3 className="text-2xl font-bold">For Clients</h3>
+                            </div>
+                            {[
+                                { step: "01", title: "Post a Request", desc: "Describe the task you need help with in detail." },
+                                { step: "02", title: "Review Quotes", desc: "Receive and compare quotes from verified professionals." },
+                                { step: "03", title: "Get Results", desc: "Accept the best quote and get your service completed." }
+                            ].map((item, idx) => (
+                                <motion.div key={idx} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.1 }} className="flex gap-6 items-start group">
+                                    <span className="text-4xl font-black text-indigo-100 group-hover:text-indigo-200 transition-colors uppercase italic">{item.step}</span>
+                                    <div>
+                                        <h4 className="text-lg font-bold text-gray-900 mb-1">{item.title}</h4>
+                                        <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        {/* Providers Column */}
+                        <div className="space-y-8">
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+                                    <Briefcase className="w-6 h-6" />
+                                </div>
+                                <h3 className="text-2xl font-bold">For Professionals</h3>
+                            </div>
+                            {[
+                                { step: "01", title: "Find Opportunities", desc: "Browse through active service requests in your category." },
+                                { step: "02", title: "Submit Quotes", desc: "Pitch your services with a clear price and timeline." },
+                                { step: "03", title: "Start Earning", desc: "Get hired and build your reputation with premium clients." }
+                            ].map((item, idx) => (
+                                <motion.div key={idx} initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.1 }} className="flex gap-6 items-start group">
+                                    <span className="text-4xl font-black text-purple-100 group-hover:text-purple-200 transition-colors uppercase italic">{item.step}</span>
+                                    <div>
+                                        <h4 className="text-lg font-bold text-gray-900 mb-1">{item.title}</h4>
+                                        <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Feature Section - Expanded */}
+            <section className="py-24 relative bg-slate-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="text-center mb-16">
+                        <h2 className="text-4xl font-black text-gray-900 mb-4">Simply Better in Every Way</h2>
+                        <p className="text-gray-500 max-w-2xl mx-auto text-lg">We’ve built a platform that prioritzes security, clarity, and speed above all else.</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {[
-                            { icon: Shield, title: "Secured", desc: "Every transaction is protected by our advanced security layers.", color: "bg-indigo-50 text-indigo-600" },
-                            { icon: Star, title: "Premium", desc: "Access the top 1% of talent and high-value opportunities.", color: "bg-purple-50 text-purple-600" },
-                            { icon: Clock, title: "Efficiency", desc: "Speed matters. Get results in hours, not weeks.", color: "bg-pink-50 text-pink-600" }
+                            { icon: Shield, title: "Secure Workflow", desc: "End-to-end encryption for your data and secure communication channels.", color: "bg-indigo-50 text-indigo-600" },
+                            { icon: Star, title: "Verified Ratings", desc: "Every professional is rated by real clients, ensuring the highest standards.", color: "bg-purple-50 text-purple-600" },
+                            { icon: ArrowRight, title: "Transparent Pricing", desc: "No hidden fees. Compare quotes and know exactly what you’ll pay.", color: "bg-pink-50 text-pink-600" },
+                            { icon: Clock, title: "Real-time Alerts", desc: "Get notified instantly when you receive a quote or an acceptance.", color: "bg-blue-50 text-blue-600" },
+                            { icon: Search, title: "Smart Filtering", desc: "Filter by price, category, and rating to find the perfect match.", color: "bg-emerald-50 text-emerald-600" },
+                            { icon: CheckCircle, title: "Quality Guarantee", desc: "We strive to maintain a premium pool of talent for your peace of mind.", color: "bg-amber-50 text-amber-600" }
                         ].map((feature, index) => (
                             <motion.div
                                 key={index}
@@ -90,15 +146,67 @@ const LandingPage = () => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: index * 0.1 }}
                                 viewport={{ once: true }}
-                                className="glass-card p-10 rounded-[32px] group hover:scale-[1.02] transition-all"
+                                className="glass-card p-10 rounded-[32px] group hover:scale-[1.02] transition-all bg-white shadow-sm border border-gray-100 hover:border-indigo-100"
                             >
-                                <div className={`w-16 h-16 ${feature.color} rounded-2xl flex items-center justify-center mb-8 transform group-hover:rotate-6 transition-transform`}>
+                                <div className={`w-16 h-16 ${feature.color} rounded-2xl flex items-center justify-center mb-8 transform group-hover:rotate-6 transition-transform shadow-sm`}>
                                     <feature.icon className="w-8 h-8" />
                                 </div>
                                 <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
-                                <p className="text-gray-500 leading-relaxed text-lg">{feature.desc}</p>
+                                <p className="text-gray-500 leading-relaxed text-sm lg:text-base">{feature.desc}</p>
                             </motion.div>
                         ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Final CTA Section */}
+            <section className="py-24 relative overflow-hidden bg-white">
+                <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none">
+                    <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-indigo-600 to-transparent"></div>
+                    <div className="absolute bottom-0 left-0 w-1/2 h-full bg-gradient-to-r from-purple-600 to-transparent"></div>
+                </div>
+
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                    <div className="glass-card py-20 px-8 rounded-[48px] border border-gray-100 shadow-2xl shadow-indigo-100/30">
+                        <motion.h2
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            className="text-4xl md:text-6xl font-black text-gray-900 mb-8"
+                        >
+                            Ready to transform the <br /> way you work?
+                        </motion.h2>
+                        <p className="text-xl text-gray-500 mb-12 max-w-2xl mx-auto">Join the marketplace where quality meets opportunity. Whether you need a task done or want to offer your skills, Helpzy is your new home.</p>
+
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                            <Link to={hireLink} className="w-full sm:w-auto">
+                                <button className="w-full px-12 py-5 bg-indigo-600 text-white rounded-2xl font-black hover:bg-indigo-700 transition-all premium-shadow tracking-widest uppercase text-sm">
+                                    Start Hiring
+                                </button>
+                            </Link>
+                            <Link to={workLink} className="w-full sm:w-auto">
+                                <button className="w-full px-12 py-5 bg-gray-900 text-white rounded-2xl font-black hover:bg-black transition-all premium-shadow tracking-widest uppercase text-sm">
+                                    Find Jobs
+                                </button>
+                            </Link>
+                        </div>
+
+                        <div className="mt-16 flex items-center justify-center gap-8 grayscale opacity-50">
+                            {/* Placeholder for "Trusted by" or Platform Stats */}
+                            <div className="flex flex-col items-center">
+                                <span className="text-3xl font-black text-gray-900">500+</span>
+                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Active Jobs</span>
+                            </div>
+                            <div className="w-[1px] h-8 bg-gray-200"></div>
+                            <div className="flex flex-col items-center">
+                                <span className="text-3xl font-black text-gray-900">1.2k</span>
+                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Verified Pros</span>
+                            </div>
+                            <div className="w-[1px] h-8 bg-gray-200"></div>
+                            <div className="flex flex-col items-center">
+                                <span className="text-3xl font-black text-gray-900">4.9/5</span>
+                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Client Rating</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
