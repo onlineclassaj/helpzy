@@ -32,7 +32,7 @@ export const ServiceProvider = ({ children }) => {
             }
 
             // Fetch services with profiles and quotes
-            const { data: rawData, error: dbError } = await supabase
+            let { data: rawData, error: dbError } = await supabase
                 .from('services')
                 .select(`
                     *,
@@ -54,8 +54,6 @@ export const ServiceProvider = ({ children }) => {
 
                 if (simpleError) throw simpleError;
                 rawData = simpleData;
-            } else {
-                // If profiles join worked, data is in rawData
             }
 
             const processed = (rawData || []).map(item => {
