@@ -1,12 +1,13 @@
 import React from 'react';
 import { useServices } from '../context/ServiceContext';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { PlusCircle, List } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ServiceCard from '../components/ServiceCard';
 
 const HireDashboard = () => {
     const { user, services, loading } = useServices();
+    const [activeTab, setActiveTab] = React.useState('active');
 
     if (loading) {
         return (
@@ -14,10 +15,6 @@ const HireDashboard = () => {
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
             </div>
         );
-    }
-
-    if (!user) {
-        return <Navigate to="/login" replace />;
     }
 
     const myServices = services.filter(service =>

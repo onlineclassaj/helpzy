@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useServices } from '../context/ServiceContext';
-import { Navigate } from 'react-router-dom';
 import { Briefcase, Search, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ServiceCard from '../components/ServiceCard';
@@ -9,12 +8,10 @@ import { ALL_SUB_CATEGORIES } from '../constants/categories';
 
 const WorkDashboard = () => {
     const { services, user, loading } = useServices();
-    const [searchTerm, setSearchTerm] = useState('');
-    const [locationSearch, setLocationSearch] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('All');
-    const [activeTab, setActiveTab] = useState('marketplace');
-
-    if (!user) return <Navigate to="/login" />;
+    const [searchTerm, setSearchTerm] = React.useState('');
+    const [locationSearch, setLocationSearch] = React.useState('');
+    const [selectedCategory, setSelectedCategory] = React.useState('All');
+    const [activeTab, setActiveTab] = React.useState('marketplace');
 
     const filteredServices = services.filter(service => {
         const matchesCategory = selectedCategory === 'All' || service.category === selectedCategory;
@@ -149,12 +146,6 @@ const WorkDashboard = () => {
                 )}
             </div>
         </div>
-    );
-};
-
-export default WorkDashboard;
-            </div >
-        </div >
     );
 };
 

@@ -7,8 +7,8 @@ import QuoteModal from './QuoteModal';
 
 const ServiceCard = ({ service, isOwner = false }) => {
     const { deleteService } = useServices();
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false);
+    const [isModalOpen, setIsModalOpen] = React.useState(false);
+    const [isDeleting, setIsDeleting] = React.useState(false);
 
     const handleDelete = async () => {
         if (window.confirm('Are you sure you want to delete this job post? This action cannot be undone.')) {

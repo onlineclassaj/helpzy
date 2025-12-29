@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useServices } from '../context/ServiceContext';
-import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { User, Lock, Mail, ArrowRight, Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react';
+import { User, Lock, Mail, ArrowRight, Eye, EyeOff, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 
 const Login = () => {
-    const { login, signup, resetPassword } = useServices();
+    const { user, login, signup, resetPassword, loading: authLoading } = useServices();
     const navigate = useNavigate();
+    const location = useLocation();
     const [searchParams] = useSearchParams();
     const [isLogin, setIsLogin] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
@@ -20,6 +21,16 @@ const Login = () => {
         name: ''
     });
 
+    // Determine where to redirect after login
+    const from = location.state?.from?.pathname || searchParams.get('redirect') || '/';
+
+    // If user is already logged in, redirect them away
+    React.useEffect(() => {
+        if (!authLoading && user) {
+            navigate(from, { replace: true });
+        }
+    }, [user, authLoading, navigate, from]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -32,9 +43,8 @@ const Login = () => {
                 const result = await login(formData.email, formData.password);
 
                 if (result.success) {
-                    // Get redirect parameter from URL, default to landing page
-                    const redirectTo = searchParams.get('redirect') || '/';
-                    navigate(redirectTo);
+                    // Redirect to intended page or home, using replace to clean history
+                    navigate(from, { replace: true });
                 } else {
                     setError(result.message || 'Login failed. Please check your credentials.');
                 }
@@ -77,6 +87,14 @@ const Login = () => {
         setLoading(false);
     };
 
+
+    if (authLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center pt-24 sm:pt-32 pb-12 px-4 sm:px-6 lg:px-8">

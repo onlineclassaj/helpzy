@@ -12,6 +12,8 @@ import HireDashboard from './pages/HireDashboard';
 import WorkDashboard from './pages/WorkDashboard';
 import ServiceDetails from './pages/ServiceDetails';
 
+import AuthGuard from './components/AuthGuard';
+
 import { ServiceProvider } from './context/ServiceContext';
 
 function App() {
@@ -22,12 +24,14 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/post-service" element={<PostService />} />
-            <Route path="/find-work" element={<FindWork />} />
-            <Route path="/my-posts" element={<MyPosts />} />
 
-            <Route path="/hire" element={<HireDashboard />} />
-            <Route path="/work" element={<WorkDashboard />} />
+            {/* Protected Routes */}
+            <Route path="/post-service" element={<AuthGuard><PostService /></AuthGuard>} />
+            <Route path="/find-work" element={<AuthGuard><FindWork /></AuthGuard>} />
+            <Route path="/my-posts" element={<AuthGuard><MyPosts /></AuthGuard>} />
+            <Route path="/hire" element={<AuthGuard><HireDashboard /></AuthGuard>} />
+            <Route path="/work" element={<AuthGuard><WorkDashboard /></AuthGuard>} />
+
             <Route path="/service/:id" element={<ServiceDetails />} />
             <Route path="/login" element={<Login />} />
           </Routes>

@@ -7,8 +7,8 @@ import { useServices } from '../context/ServiceContext';
 const LandingPage = () => {
     const { user } = useServices();
 
-    const hireLink = user ? '/hire' : '/login?redirect=/hire';
-    const workLink = user ? '/work' : '/login?redirect=/work';
+    const hireLink = '/hire';
+    const workLink = '/work';
 
     return (
         <div className="min-h-screen bg-slate-50 overflow-x-hidden">
