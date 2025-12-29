@@ -93,13 +93,13 @@ export const ServiceProvider = ({ children }) => {
         }
     };
 
-    const fetchNotifications = async () => {
-        if (!user) return;
+    const fetchNotifications = async (currentUserId = user?.id) => {
+        if (!currentUserId) return;
         try {
             const { data, error } = await supabase
                 .from('notifications')
                 .select('*')
-                .eq('user_id', user.id)
+                .eq('user_id', currentUserId)
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
@@ -117,7 +117,7 @@ export const ServiceProvider = ({ children }) => {
                 .update({ is_read: true })
                 .eq('id', id);
             if (error) throw error;
-            fetchNotifications();
+            fetchNotifications(user?.id);
         } catch (error) {
             console.error('MarkNotificationAsRead Error:', error);
         }
@@ -148,7 +148,7 @@ export const ServiceProvider = ({ children }) => {
             console.log('ServiceContext: Initial session retrieved:', session?.user?.id || 'No user');
             setUser(session?.user ?? null);
             fetchServices();
-            if (session?.user) fetchNotifications();
+            if (session?.user) fetchNotifications(session.user.id);
         }).catch(err => {
             console.error('ServiceContext: getSession Error:', err);
             setLoading(false);
@@ -161,7 +161,7 @@ export const ServiceProvider = ({ children }) => {
             console.log('ServiceContext: Auth event fired:', _event, session?.user?.id || 'No user');
             setUser(session?.user ?? null);
             fetchServices(); // Refresh data on login/logout
-            if (session?.user) fetchNotifications();
+            if (session?.user) fetchNotifications(session.user.id);
         });
 
         return () => {

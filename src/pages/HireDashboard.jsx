@@ -18,7 +18,10 @@ const HireDashboard = () => {
     }
 
     const myServices = services.filter(service =>
-        service && user && service.user_id === user.id
+        service &&
+        user &&
+        service.user_id === user.id &&
+        service.status !== 'completed'
     );
 
     return (

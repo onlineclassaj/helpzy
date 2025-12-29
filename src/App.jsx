@@ -12,6 +12,7 @@ import MyPosts from './pages/MyPosts';
 import HireDashboard from './pages/HireDashboard';
 import WorkDashboard from './pages/WorkDashboard';
 import ServiceDetails from './pages/ServiceDetails';
+import History from './pages/History';
 import Profile from './pages/Profile';
 
 import AuthGuard from './components/AuthGuard';
@@ -33,6 +34,7 @@ function App() {
               <Route path="/find-work" element={<AuthGuard><FindWork /></AuthGuard>} />
               <Route path="/my-posts" element={<AuthGuard><MyPosts /></AuthGuard>} />
               <Route path="/hire" element={<AuthGuard><HireDashboard /></AuthGuard>} />
+              <Route path="/history" element={<AuthGuard><History /></AuthGuard>} />
               <Route path="/work" element={<AuthGuard><WorkDashboard /></AuthGuard>} />
               <Route path="/profile" element={<AuthGuard><Profile /></AuthGuard>} />
 
