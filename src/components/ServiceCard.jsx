@@ -4,23 +4,28 @@ import { useServices } from '../context/ServiceContext';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import QuoteModal from './QuoteModal';
+import ConfirmModal from './ConfirmModal';
 
 const ServiceCard = ({ service, isOwner = false }) => {
     const { deleteService } = useServices();
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = React.useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
     const [isDeleting, setIsDeleting] = React.useState(false);
 
-    const handleDelete = async (e) => {
+    const handleDeleteClick = (e) => {
         e.stopPropagation();
-        if (window.confirm('Are you sure you want to delete this job post?')) {
-            setIsDeleting(true);
-            const result = await deleteService(service.id);
-            if (!result.success) {
-                alert(result.message || 'Failed to delete.');
-                setIsDeleting(false);
-            }
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        setIsDeleting(true);
+        const result = await deleteService(service.id);
+        if (!result.success) {
+            alert(result.message || 'Failed to delete.');
         }
+        setIsDeleting(false);
+        setIsDeleteModalOpen(false);
     };
 
     const handleCardClick = () => {
@@ -39,7 +44,6 @@ const ServiceCard = ({ service, isOwner = false }) => {
 
     const quoteCount = service.quotes ? service.quotes.length : 0;
 
-    // Unified tile wrapper styles for consistency
     const tileClasses = "bg-white border border-gray-200 hover:border-indigo-300 p-4 rounded-xl cursor-pointer shadow-sm hover:shadow-md transition-all duration-150";
 
     return (
@@ -53,25 +57,20 @@ const ServiceCard = ({ service, isOwner = false }) => {
                 className={tileClasses}
             >
                 {isOwner ? (
-                    /* ===== OWNER VIEW (I Want to Hire - My Active Requests) ===== */
                     <>
-                        {/* Top Row: Date left, Delete right (RED) */}
+                        {/* Top Row: Date left, Delete right */}
                         <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center text-gray-400 text-xs font-medium">
                                 <Clock className="w-3.5 h-3.5 mr-1" />
                                 {new Date(service.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                             </div>
                             <button
-                                onClick={handleDelete}
+                                onClick={handleDeleteClick}
                                 disabled={isDeleting}
                                 className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
                                 title="Delete"
                             >
-                                {isDeleting ? (
-                                    <div className="w-4 h-4 border-2 border-red-400 border-t-transparent animate-spin rounded-full" />
-                                ) : (
-                                    <Trash2 className="w-4 h-4" />
-                                )}
+                                <Trash2 className="w-4 h-4" />
                             </button>
                         </div>
 
@@ -91,7 +90,7 @@ const ServiceCard = ({ service, isOwner = false }) => {
                             )}
                         </div>
 
-                        {/* Bottom Row: Quote count left, View button right (BIGGER) */}
+                        {/* Bottom Row: Quote count left, View button right */}
                         <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                             {quoteCount > 0 ? (
                                 <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">
@@ -110,7 +109,6 @@ const ServiceCard = ({ service, isOwner = false }) => {
                         </div>
                     </>
                 ) : (
-                    /* ===== WORKER VIEW (I Want to Work) ===== */
                     <>
                         {/* Top Row: Category left, Date right */}
                         <div className="flex items-center justify-between mb-2">
@@ -136,7 +134,7 @@ const ServiceCard = ({ service, isOwner = false }) => {
                             )}
                         </div>
 
-                        {/* Bottom Row: Quote count left, Send Quote button right (BIGGER) */}
+                        {/* Bottom Row: Quote count left, Send Quote button right */}
                         <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                             {quoteCount > 0 ? (
                                 <span className="text-xs font-medium text-gray-500">
@@ -162,6 +160,16 @@ const ServiceCard = ({ service, isOwner = false }) => {
                 onClose={() => setIsModalOpen(false)}
                 serviceId={service.id}
                 serviceTitle={service.title}
+            />
+
+            <ConfirmModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={handleConfirmDelete}
+                title="Delete Request"
+                message={`Are you sure you want to delete "${service.title}"? This action cannot be undone.`}
+                confirmText="Delete"
+                isLoading={isDeleting}
             />
         </>
     );

@@ -12,6 +12,7 @@ import MyPosts from './pages/MyPosts';
 import HireDashboard from './pages/HireDashboard';
 import WorkDashboard from './pages/WorkDashboard';
 import ServiceDetails from './pages/ServiceDetails';
+import Profile from './pages/Profile';
 
 import AuthGuard from './components/AuthGuard';
 
@@ -33,6 +34,7 @@ function App() {
               <Route path="/my-posts" element={<AuthGuard><MyPosts /></AuthGuard>} />
               <Route path="/hire" element={<AuthGuard><HireDashboard /></AuthGuard>} />
               <Route path="/work" element={<AuthGuard><WorkDashboard /></AuthGuard>} />
+              <Route path="/profile" element={<AuthGuard><Profile /></AuthGuard>} />
 
               <Route path="/service/:id" element={<ServiceDetails />} />
               <Route path="/login" element={<Login />} />
