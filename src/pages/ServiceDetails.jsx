@@ -37,22 +37,23 @@ const ServiceDetails = () => {
     const isOwner = user && service.user_id === user.id;
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gray-50 pt-20 sm:pt-24 pb-8 px-4 sm:px-6 lg:px-8">
             <div className="max-w-5xl mx-auto">
-                <Link to={isOwner ? "/my-posts" : "/find-work"} className="inline-flex items-center text-gray-500 hover:text-gray-900 mb-6 transition-colors">
+                <Link to={isOwner ? "/my-posts" : "/find-work"} className="inline-flex items-center text-gray-500 hover:text-gray-900 mb-6 transition-colors relative z-10">
                     <ArrowLeft className="w-4 h-4 mr-1" />
                     {isOwner ? "Back to My Posts" : "Back to Jobs"}
                 </Link>
 
                 {/* Service Info Header */}
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-8">
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 mb-8">
+                    {/* Header Row */}
                     <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
-                        <div>
+                        <div className="flex-1">
                             <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-600 mb-2">
                                 {service.category}
                             </span>
-                            <h1 className="text-3xl font-bold text-gray-900 mb-2">{service.title}</h1>
-                            <div className="flex flex-wrap items-center gap-4 text-gray-400 text-sm mb-4">
+                            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{service.title}</h1>
+                            <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-gray-400 text-sm">
                                 <span className="flex items-center">
                                     <Clock className="w-4 h-4 mr-1" />
                                     Posted on {new Date(service.createdAt).toLocaleDateString()}
@@ -66,22 +67,24 @@ const ServiceDetails = () => {
                             </div>
                         </div>
 
-                        {/* Provider Action Button (if not owner) */}
+                        {/* Desktop: Send Quote in header */}
                         {!isOwner && (
                             <button
                                 onClick={() => setIsModalOpen(true)}
-                                className="bg-indigo-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-indigo-700 shadow-lg transform hover:-translate-y-0.5 transition-all flex items-center"
+                                className="hidden md:flex bg-indigo-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-indigo-700 shadow-lg transform hover:-translate-y-0.5 transition-all items-center"
                             >
                                 Send Quote
                                 <Send className="w-5 h-5 ml-2" />
                             </button>
                         )}
                     </div>
-                    <div className="prose max-w-none text-gray-600 border-t border-gray-100 pt-6 mt-2">
-                        <div className="flex flex-col md:flex-row gap-8">
+
+                    {/* Description Section */}
+                    <div className="prose max-w-none text-gray-600 border-t border-gray-100 pt-6 mt-4">
+                        <div className="flex flex-col md:flex-row gap-6 md:gap-8">
                             <div className="flex-1">
                                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Description</h3>
-                                <p className="whitespace-pre-wrap">{service.description}</p>
+                                <p className="whitespace-pre-wrap text-sm sm:text-base">{service.description}</p>
                             </div>
                             {service.image_url && (
                                 <div className="md:w-1/3">
@@ -96,6 +99,17 @@ const ServiceDetails = () => {
                             )}
                         </div>
                     </div>
+
+                    {/* Mobile: Send Quote after description */}
+                    {!isOwner && (
+                        <button
+                            onClick={() => setIsModalOpen(true)}
+                            className="md:hidden w-full mt-6 bg-indigo-600 text-white font-bold py-3.5 px-6 rounded-xl hover:bg-indigo-700 shadow-lg transition-all flex items-center justify-center"
+                        >
+                            Send Quote
+                            <Send className="w-5 h-5 ml-2" />
+                        </button>
+                    )}
                 </div>
 
                 <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
