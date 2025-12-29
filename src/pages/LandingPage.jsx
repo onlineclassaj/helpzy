@@ -194,13 +194,13 @@ const LandingPage = () => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: index * 0.1 }}
                                 viewport={{ once: true }}
-                                className="glass-card p-10 rounded-[32px] group hover:scale-[1.02] transition-all bg-white shadow-sm border border-gray-100 hover:border-indigo-100"
+                                className={`p-10 rounded-[32px] group hover:scale-[1.02] transition-all shadow-sm hover:shadow-md ${feature.color}`}
                             >
-                                <div className={`w-16 h-16 ${feature.color} rounded-2xl flex items-center justify-center mb-8 transform group-hover:rotate-6 transition-transform shadow-sm`}>
+                                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 transform group-hover:rotate-6 transition-transform shadow-sm">
                                     <feature.icon className="w-8 h-8" />
                                 </div>
-                                <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
-                                <p className="text-gray-500 leading-relaxed text-sm lg:text-base">{feature.desc}</p>
+                                <h3 className="text-2xl font-bold mb-4 text-gray-900">{feature.title}</h3>
+                                <p className="text-gray-600 leading-relaxed text-sm lg:text-base font-medium">{feature.desc}</p>
                             </motion.div>
                         ))}
                     </div>

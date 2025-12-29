@@ -30,9 +30,14 @@ const Navbar = () => {
         ? "glass-card sm:rounded-[24px] px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between premium-shadow border-b sm:border border-gray-100"
         : "bg-white/95 backdrop-blur-sm px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between shadow-sm border-b border-gray-100";
 
+    // Override for Home Page to ensure full masking
+    const finalCardClasses = isHomePage
+        ? "bg-white sm:rounded-[24px] px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between premium-shadow border-b sm:border border-gray-100 z-[100]"
+        : cardClasses;
+
     return (
         <nav className={navClasses}>
-            <div className={cardClasses}>
+            <div className={finalCardClasses}>
                 <div className="flex items-center gap-4 sm:gap-8">
                     <Link to="/" className="text-xl sm:text-2xl font-black text-gray-900 tracking-tighter flex items-center gap-2 group">
                         <div className="w-10 h-10 sm:w-12 sm:h-12 premium-gradient rounded-xl sm:rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200 group-hover:rotate-6 transition-transform text-base sm:text-xl font-black">

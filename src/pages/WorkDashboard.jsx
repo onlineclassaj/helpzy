@@ -27,7 +27,7 @@ const WorkDashboard = () => {
     });
 
     return (
-        <div className="min-h-screen bg-gray-50 pt-20 sm:pt-28 pb-12">
+        <div className="min-h-screen bg-gray-50 pt-6 sm:pt-12 pb-12">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header Section */}
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8">
