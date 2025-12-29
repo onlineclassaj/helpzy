@@ -39,6 +39,9 @@ const ServiceCard = ({ service, isOwner = false }) => {
 
     const quoteCount = service.quotes ? service.quotes.length : 0;
 
+    // Unified tile wrapper styles for consistency
+    const tileClasses = "bg-white border border-gray-200 hover:border-indigo-300 p-4 rounded-xl cursor-pointer shadow-sm hover:shadow-md transition-all duration-150";
+
     return (
         <>
             <motion.div
@@ -47,104 +50,107 @@ const ServiceCard = ({ service, isOwner = false }) => {
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.995 }}
                 onClick={handleCardClick}
-                className="bg-white border border-gray-200 hover:border-indigo-300 p-3 rounded-xl cursor-pointer shadow-sm hover:shadow-md transition-all duration-150"
+                className={tileClasses}
             >
                 {isOwner ? (
-                    /* ===== OWNER VIEW (My Active Requests) ===== */
+                    /* ===== OWNER VIEW (I Want to Hire - My Active Requests) ===== */
                     <>
-                        {/* Top Row: Date left, Delete right */}
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center text-gray-400 text-[10px] font-medium">
-                                <Clock className="w-3 h-3 mr-1" />
+                        {/* Top Row: Date left, Delete right (RED) */}
+                        <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center text-gray-400 text-xs font-medium">
+                                <Clock className="w-3.5 h-3.5 mr-1" />
                                 {new Date(service.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                             </div>
                             <button
                                 onClick={handleDelete}
                                 disabled={isDeleting}
-                                className="p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors disabled:opacity-50"
+                                className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
                                 title="Delete"
                             >
                                 {isDeleting ? (
-                                    <div className="w-3.5 h-3.5 border-2 border-gray-400 border-t-transparent animate-spin rounded-full" />
+                                    <div className="w-4 h-4 border-2 border-red-400 border-t-transparent animate-spin rounded-full" />
                                 ) : (
-                                    <Trash2 className="w-3.5 h-3.5" />
+                                    <Trash2 className="w-4 h-4" />
                                 )}
                             </button>
                         </div>
 
                         {/* Content */}
-                        <div className="mb-2">
-                            <span className="inline-block px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide bg-indigo-100 text-indigo-700 mb-1">
+                        <div className="mb-3">
+                            <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide bg-indigo-100 text-indigo-700 mb-1.5">
                                 {service.category}
                             </span>
-                            <h3 className="text-sm font-semibold text-gray-900 leading-snug line-clamp-1">
+                            <h3 className="text-sm font-semibold text-gray-900 leading-snug line-clamp-2">
                                 {service.title}
                             </h3>
                             {service.location && (
-                                <div className="flex items-center text-gray-500 text-[10px] mt-0.5">
-                                    <MapPin className="w-2.5 h-2.5 mr-0.5" />
+                                <div className="flex items-center text-gray-500 text-xs mt-1">
+                                    <MapPin className="w-3 h-3 mr-1" />
                                     <span className="truncate">{service.location}</span>
                                 </div>
                             )}
                         </div>
 
-                        {/* Bottom Row: Quote count left, View button right */}
-                        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                        {/* Bottom Row: Quote count left, View button right (BIGGER) */}
+                        <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                             {quoteCount > 0 ? (
-                                <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
-                                    {quoteCount} quote{quoteCount !== 1 ? 's' : ''} received
+                                <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">
+                                    {quoteCount} quote{quoteCount !== 1 ? 's' : ''}
                                 </span>
                             ) : (
-                                <span className="text-[10px] text-gray-400">No quotes yet</span>
+                                <span className="text-xs text-gray-400">No quotes yet</span>
                             )}
                             <button
                                 onClick={handleViewQuotes}
-                                className="flex items-center gap-1 px-3 py-1.5 bg-indigo-600 text-white text-[10px] font-bold rounded-lg hover:bg-indigo-700 transition-colors"
+                                className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white text-xs font-bold rounded-lg hover:bg-indigo-700 transition-colors"
                             >
-                                <Eye className="w-3 h-3" />
-                                View
+                                <Eye className="w-4 h-4" />
+                                View Quotes
                             </button>
                         </div>
                     </>
                 ) : (
                     /* ===== WORKER VIEW (I Want to Work) ===== */
                     <>
-                        {/* Main Content Row */}
-                        <div className="flex items-start gap-3">
-                            {/* Left: Info stack */}
-                            <div className="flex-1 min-w-0">
-                                <span className="inline-block px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide bg-indigo-100 text-indigo-700 mb-1">
-                                    {service.category}
-                                </span>
-                                <h3 className="text-sm font-semibold text-gray-900 leading-snug line-clamp-1">
-                                    {service.title}
-                                </h3>
-                                {service.location && (
-                                    <div className="flex items-center text-gray-500 text-[10px] mt-0.5">
-                                        <MapPin className="w-2.5 h-2.5 mr-0.5" />
-                                        <span className="truncate">{service.location}</span>
-                                    </div>
-                                )}
-                                <div className="flex items-center gap-2 mt-1.5 text-[10px] text-gray-400">
-                                    <span className="flex items-center">
-                                        <Clock className="w-2.5 h-2.5 mr-0.5" />
-                                        {new Date(service.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                                    </span>
-                                    {quoteCount > 0 && (
-                                        <span className="text-emerald-600 font-medium">
-                                            • {quoteCount} quote{quoteCount !== 1 ? 's' : ''}
-                                        </span>
-                                    )}
-                                </div>
+                        {/* Top Row: Category left, Date right */}
+                        <div className="flex items-center justify-between mb-2">
+                            <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide bg-indigo-100 text-indigo-700">
+                                {service.category}
+                            </span>
+                            <div className="flex items-center text-gray-400 text-xs font-medium">
+                                <Clock className="w-3.5 h-3.5 mr-1" />
+                                {new Date(service.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                             </div>
+                        </div>
 
-                            {/* Right: Send Quote button (compact) */}
+                        {/* Content */}
+                        <div className="mb-3">
+                            <h3 className="text-sm font-semibold text-gray-900 leading-snug line-clamp-2">
+                                {service.title}
+                            </h3>
+                            {service.location && (
+                                <div className="flex items-center text-gray-500 text-xs mt-1">
+                                    <MapPin className="w-3 h-3 mr-1" />
+                                    <span className="truncate">{service.location}</span>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Bottom Row: Quote count left, Send Quote button right (BIGGER) */}
+                        <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                            {quoteCount > 0 ? (
+                                <span className="text-xs font-medium text-gray-500">
+                                    {quoteCount} quote{quoteCount !== 1 ? 's' : ''} sent
+                                </span>
+                            ) : (
+                                <span className="text-xs text-gray-400">Be first to quote</span>
+                            )}
                             <button
                                 onClick={handleQuoteClick}
-                                className="flex-shrink-0 flex items-center gap-1 px-3 py-2 premium-gradient text-white text-[10px] font-bold rounded-lg hover:opacity-90 transition-all shadow-sm"
+                                className="flex items-center gap-1.5 px-4 py-2 premium-gradient text-white text-xs font-bold rounded-lg hover:opacity-90 transition-all shadow-sm"
                             >
-                                <MessageSquare className="w-3 h-3" />
-                                Quote
+                                <MessageSquare className="w-4 h-4" />
+                                Send Quote
                             </button>
                         </div>
                     </>
