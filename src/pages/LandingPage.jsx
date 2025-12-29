@@ -46,19 +46,50 @@ const LandingPage = () => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.7, delay: 0.4 }}
-                            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+                            className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto"
                         >
-                            <Link to={hireLink} className="w-full sm:w-auto">
-                                <button className="w-full px-8 py-4 bg-gray-900 text-white rounded-2xl font-bold hover:bg-black transition-all premium-shadow flex items-center justify-center gap-2 group">
-                                    I want to Hire
-                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                </button>
+                            {/* Hire Tile */}
+                            <Link to={hireLink} className="block group">
+                                <motion.div
+                                    whileHover={{ scale: 1.03, y: -4 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    className="bg-gradient-to-br from-gray-900 to-gray-800 text-white p-6 sm:p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 relative overflow-hidden"
+                                >
+                                    <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full -translate-y-8 translate-x-8 group-hover:scale-150 transition-transform duration-500"></div>
+                                    <div className="relative z-10">
+                                        <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-white/20 transition-colors">
+                                            <Search className="w-6 h-6 text-white" />
+                                        </div>
+                                        <h3 className="text-xl sm:text-2xl font-black mb-2">I want to Hire</h3>
+                                        <p className="text-sm text-white/70 mb-4">Post a task and get quotes from professionals</p>
+                                        <div className="flex items-center text-xs font-bold text-white/50 group-hover:text-white/80 transition-colors">
+                                            <span>GET STARTED</span>
+                                            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                                        </div>
+                                    </div>
+                                </motion.div>
                             </Link>
-                            <Link to={workLink} className="w-full sm:w-auto">
-                                <button className="w-full px-8 py-4 bg-white text-gray-900 border border-gray-200 rounded-2xl font-bold hover:bg-gray-50 transition-all flex items-center justify-center gap-2">
-                                    I want to Work
-                                    <Briefcase className="w-5 h-5" />
-                                </button>
+
+                            {/* Work Tile */}
+                            <Link to={workLink} className="block group">
+                                <motion.div
+                                    whileHover={{ scale: 1.03, y: -4 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    className="bg-white text-gray-900 p-6 sm:p-8 rounded-3xl shadow-xl hover:shadow-2xl border border-gray-100 transition-all duration-300 relative overflow-hidden"
+                                >
+                                    <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-50 rounded-full -translate-y-8 translate-x-8 group-hover:scale-150 transition-transform duration-500"></div>
+                                    <div className="relative z-10">
+                                        <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-indigo-100 transition-colors">
+                                            <Briefcase className="w-6 h-6 text-indigo-600" />
+                                        </div>
+                                        <h3 className="text-xl sm:text-2xl font-black mb-2">I want to Work</h3>
+                                        <p className="text-sm text-gray-500 mb-4">Browse jobs and start earning today</p>
+                                        <div className="flex items-center text-xs font-bold text-gray-400 group-hover:text-indigo-600 transition-colors">
+                                            <span>FIND JOBS</span>
+                                            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                                        </div>
+                                    </div>
+                                </motion.div>
                             </Link>
                         </motion.div>
                     </div>
