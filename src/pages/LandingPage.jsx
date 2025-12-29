@@ -181,31 +181,29 @@ const LandingPage = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {[
-                            {
-                                [
-                                { icon: Shield, title: "Secure Workflow", desc: "End-to-end encryption for your data and secure communication channels.", color: "bg-indigo-100 text-indigo-700 border border-indigo-200" },
-                                { icon: Star, title: "Verified Ratings", desc: "Every professional is rated by real clients, ensuring the highest standards.", color: "bg-amber-100 text-amber-700 border border-amber-200" },
-                                { icon: ArrowRight, title: "Transparent Pricing", desc: "No hidden fees. Compare quotes and know exactly what you’ll pay.", color: "bg-emerald-100 text-emerald-700 border border-emerald-200" },
-                                { icon: Clock, title: "Real-time Alerts", desc: "Get notified instantly when you receive a quote or an acceptance.", color: "bg-blue-100 text-blue-700 border border-blue-200" },
-                                { icon: Search, title: "Smart Filtering", desc: "Filter by price, category, and rating to find the perfect match.", color: "bg-purple-100 text-purple-700 border border-purple-200" },
-                                { icon: CheckCircle, title: "Quality Guarantee", desc: "We strive to maintain a premium pool of talent for your peace of mind.", color: "bg-rose-100 text-rose-700 border border-rose-200" }
-                                ].map((feature, index) => (
-                                    <motion.div
-                                        key={index}
-                                        initial={{ opacity: 0, y: 30 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: index * 0.1 }}
-                                        viewport={{ once: true }}
-                                        className={`p-10 rounded-[32px] group hover:scale-[1.02] transition-all shadow-sm hover:shadow-md ${feature.color}`}
-                                    >
-                                        <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 transform group-hover:rotate-6 transition-transform shadow-sm">
-                                            <feature.icon className="w-8 h-8" />
-                                        </div>
-                                        <h3 className="text-2xl font-bold mb-4 text-gray-900">{feature.title}</h3>
-                                        <p className="text-gray-600 leading-relaxed text-sm lg:text-base font-medium">{feature.desc}</p>
-                                    </motion.div>
-                                ))
-                            }
+                            { icon: Shield, title: "Secure Workflow", desc: "End-to-end encryption for your data and secure communication channels.", color: "bg-indigo-100 text-indigo-700 border border-indigo-200" },
+                            { icon: Star, title: "Verified Ratings", desc: "Every professional is rated by real clients, ensuring the highest standards.", color: "bg-amber-100 text-amber-700 border border-amber-200" },
+                            { icon: ArrowRight, title: "Transparent Pricing", desc: "No hidden fees. Compare quotes and know exactly what you’ll pay.", color: "bg-emerald-100 text-emerald-700 border border-emerald-200" },
+                            { icon: Clock, title: "Real-time Alerts", desc: "Get notified instantly when you receive a quote or an acceptance.", color: "bg-blue-100 text-blue-700 border border-blue-200" },
+                            { icon: Search, title: "Smart Filtering", desc: "Filter by price, category, and rating to find the perfect match.", color: "bg-purple-100 text-purple-700 border border-purple-200" },
+                            { icon: CheckCircle, title: "Quality Guarantee", desc: "We strive to maintain a premium pool of talent for your peace of mind.", color: "bg-rose-100 text-rose-700 border border-rose-200" }
+                        ].map((feature, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ delay: index * 0.1 }}
+                                viewport={{ once: true }}
+                                className={`p-10 rounded-[32px] group hover:scale-[1.02] transition-all shadow-sm hover:shadow-md ${feature.color}`}
+                            >
+                                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 transform group-hover:rotate-6 transition-transform shadow-sm">
+                                    <feature.icon className="w-8 h-8" />
+                                </div>
+                                <h3 className="text-2xl font-bold mb-4 text-gray-900">{feature.title}</h3>
+                                <p className="text-gray-600 leading-relaxed text-sm lg:text-base font-medium">{feature.desc}</p>
+                            </motion.div>
+                        ))
+                        }
                     </div>
                 </div>
             </section>
