@@ -53,6 +53,9 @@ export const ServiceProvider = ({ children }) => {
             const processed = (servicesData || []).map(service => {
                 const serviceQuotes = (quotesData || []).filter(q => q.service_id === service.id);
 
+                // Handle profiles as object OR array (Supabase join quirk)
+                const clientProfile = Array.isArray(service.profiles) ? service.profiles[0] : service.profiles;
+
                 return {
                     ...service,
                     createdAt: service.created_at || new Date().toISOString(),
@@ -60,14 +63,17 @@ export const ServiceProvider = ({ children }) => {
                     category: service.category || 'Other',
                     description: service.description || '',
                     location: service.location || 'Not specified',
-                    clientName: service.profiles?.full_name || 'Anonymous User',
-                    clientRating: service.profiles?.rating || 0,
-                    quotes: serviceQuotes.map(q => ({
-                        ...q,
-                        createdAt: q.created_at || new Date().toISOString(),
-                        providerName: q.profiles?.full_name || 'Anonymous Provider',
-                        providerRating: q.profiles?.rating || 0
-                    }))
+                    clientName: clientProfile?.full_name || 'Anonymous User',
+                    clientRating: clientProfile?.rating || 0,
+                    quotes: serviceQuotes.map(q => {
+                        const providerProfile = Array.isArray(q.profiles) ? q.profiles[0] : q.profiles;
+                        return {
+                            ...q,
+                            createdAt: q.created_at || new Date().toISOString(),
+                            providerName: providerProfile?.full_name || 'Anonymous Provider',
+                            providerRating: providerProfile?.rating || 0
+                        };
+                    })
                 };
             });
 
@@ -216,15 +222,9 @@ export const ServiceProvider = ({ children }) => {
     };
 
     const addService = async (service) => {
-        if (!user) {
-            console.error('AddService Failed: No User found in context');
-            return { success: false, message: 'Must be logged in' };
-        }
-
-        console.log('Attempting to add service for user:', user.id);
-
+        if (!user) return { success: false, message: 'Must be logged in' };
         try {
-            const { data, error } = await supabase
+            const { error } = await supabase
                 .from('services')
                 .insert({
                     title: service.title,
@@ -233,29 +233,19 @@ export const ServiceProvider = ({ children }) => {
                     location: service.location,
                     image_url: service.image_url,
                     user_id: user.id,
-                })
-                .select(); // Return the inserted data for verification
-
-            if (error) {
-                console.error('Supabase Insert Error:', error);
-                throw error;
-            }
-
-            console.log('Insert Success! Data:', data);
-
-            await fetchServices(); // Wait for refresh
+                });
+            if (error) throw error;
             return { success: true };
         } catch (error) {
-            console.error('AddService Catch Error:', error.message);
+            console.error('AddService Error:', error.message);
             return { success: false, message: error.message };
+        } finally {
+            await fetchServices(); // Always refresh to be sure
         }
     };
 
     const addQuote = async (serviceId, quote) => {
         if (!user) return { success: false, message: 'Must be logged in' };
-
-        console.log('Attempting to add quote for service:', serviceId, 'by user:', user.id);
-
         try {
             const { error } = await supabase
                 .from('quotes')
@@ -266,10 +256,8 @@ export const ServiceProvider = ({ children }) => {
                     message: quote.message,
                     attachment_url: quote.attachment_url,
                 });
-
             if (error) throw error;
 
-            // Notify service owner
             const service = services.find(s => s.id === serviceId);
             if (service) {
                 await sendNotification(
@@ -279,12 +267,12 @@ export const ServiceProvider = ({ children }) => {
                     `/service/${serviceId}`
                 );
             }
-
-            await fetchServices();
             return { success: true };
         } catch (error) {
             console.error('AddQuote Error:', error.message);
             return { success: false, message: error.message };
+        } finally {
+            await fetchServices();
         }
     };
 

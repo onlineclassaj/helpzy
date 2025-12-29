@@ -16,30 +16,35 @@ self.addEventListener('install', (event) => {
     self.skipWaiting();
 });
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event - Network-First for core assets, Exclude API
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
 
-    // SECURITY: Only handle http/https
+    // 1. SECURITY: Only handle http/https
     if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
 
-    event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            if (cachedResponse) return cachedResponse;
+    // 2. EXCLUDE API: Never cache Supabase/API calls
+    if (url.hostname.includes('supabase.co')) {
+        return; // Let it go to network normally
+    }
 
-            return fetch(event.request).then((response) => {
-                if (!response || response.status !== 200 || response.type !== 'basic') {
-                    return response;
+    // 3. NETWORK-FIRST strategy for everything else (Assets)
+    event.respondWith(
+        fetch(event.request)
+            .then((response) => {
+                // If network works, update cache and return
+                if (response && response.status === 200 && response.type === 'basic') {
+                    const responseToCache = response.clone();
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, responseToCache);
+                    });
                 }
-                const responseToCache = response.clone();
-                caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, responseToCache);
-                });
                 return response;
-            }).catch(() => {
-                return null;
-            });
-        })
+            })
+            .catch(() => {
+                // If network fails (offline), try cache
+                return caches.match(event.request);
+            })
     );
 });
 
