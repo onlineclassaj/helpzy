@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useServices } from '../context/ServiceContext';
 import { UserCircle, LogOut, Briefcase, User, Bell } from 'lucide-react';
 import NotificationCenter from './NotificationCenter';
+import { APP_VERSION } from '../constants/version';
 
 const Navbar = () => {
     const { user, logout } = useServices();
@@ -32,7 +33,7 @@ const Navbar = () => {
                             H
                         </div>
                         <span className="hidden xs:block">Helpzy</span>
-                        <span className="text-[8px] sm:text-[10px] font-black bg-indigo-50 text-indigo-600 px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-lg">V2.2</span>
+                        <span className="text-[8px] sm:text-[10px] font-black bg-indigo-50 text-indigo-600 px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-lg">v{APP_VERSION}</span>
                     </Link>
                 </div>
 

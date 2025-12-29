@@ -7,6 +7,7 @@ const UpdateNotification = () => {
     const [registration, setRegistration] = useState(null);
 
     useEffect(() => {
+        // 1. Service Worker Update Logic
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.ready.then((reg) => {
                 setRegistration(reg);
@@ -43,6 +44,27 @@ const UpdateNotification = () => {
                 }
             });
         }
+
+        // 2. Manual Version Check (Cache Busting Fallback)
+        const checkVersion = async () => {
+            try {
+                const response = await fetch(`/version.json?t=${Date.now()}`); // Cache bust the check itself
+                const data = await response.json();
+                const { APP_VERSION } = await import('../constants/version');
+
+                if (data.version && data.version !== APP_VERSION) {
+                    console.log(`Version mismatch: Local ${APP_VERSION} vs Remote ${data.version}`);
+                    setShowUpdate(true);
+                }
+            } catch (err) {
+                console.warn('Version check failed:', err);
+            }
+        };
+
+        const interval = setInterval(checkVersion, 60000); // Check every minute
+        checkVersion(); // Initial check
+
+        return () => clearInterval(interval);
     }, []);
 
     const handleUpdate = () => {
