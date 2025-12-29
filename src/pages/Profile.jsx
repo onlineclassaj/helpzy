@@ -7,6 +7,8 @@ import { APP_VERSION } from '../constants/version';
 const Profile = () => {
     const { user, logout } = useServices();
     const navigate = useNavigate();
+    const [isDarkMode, setIsDarkMode] = React.useState(false);
+    const [language, setLanguage] = React.useState('ENGLISH (US)');
 
     if (!user) {
         return (
@@ -34,7 +36,7 @@ const Profile = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 pt-8 sm:pt-12 pb-20 px-4 sm:px-6">
+        <div className="min-h-screen bg-gray-50 pt-16 sm:pt-20 pb-20 px-4 sm:px-6">
             <div className="max-w-xl mx-auto">
                 {/* Profile Header (Centered) */}
                 <div className="flex flex-col items-center mb-10 mt-12 sm:mt-16">
@@ -74,29 +76,40 @@ const Profile = () => {
                     </div>
                 </div>
 
-                {/* Settings Placeholder Section */}
+                {/* Settings Section */}
                 <div className="space-y-4 mb-10">
                     <h2 className="px-4 text-[11px] font-black text-gray-400 uppercase tracking-[0.2em]">Preferences</h2>
-                    <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden opacity-80 cursor-not-allowed">
-                        <div className="p-5 flex items-center justify-between border-b border-gray-50">
+                    <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+                        <div
+                            className="p-5 flex items-center justify-between border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors"
+                            onClick={() => setIsDarkMode(!isDarkMode)}
+                        >
                             <div className="flex items-center gap-4">
                                 <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center">
-                                    <Moon className="w-5 h-5 text-slate-400" />
+                                    <Moon className={`w-5 h-5 ${isDarkMode ? 'text-indigo-600' : 'text-slate-400'}`} />
                                 </div>
                                 <span className="text-sm font-bold text-slate-600">Theme (Light/Dark)</span>
                             </div>
-                            <div className="w-10 h-5 bg-slate-100 rounded-full relative">
-                                <div className="absolute left-1 top-1 w-3 h-3 bg-white rounded-full shadow-sm"></div>
+                            <div className={`w-10 h-5 rounded-full relative transition-colors ${isDarkMode ? 'bg-indigo-600' : 'bg-slate-100'}`}>
+                                <div className={`absolute top-1 w-3 h-3 bg-white rounded-full shadow-sm transition-all ${isDarkMode ? 'left-6' : 'left-1'}`}></div>
                             </div>
                         </div>
-                        <div className="p-5 flex items-center justify-between">
+                        <div className="p-5 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors">
                             <div className="flex items-center gap-4">
                                 <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center">
                                     <Globe className="w-5 h-5 text-slate-400" />
                                 </div>
                                 <span className="text-sm font-bold text-slate-600">Language</span>
                             </div>
-                            <span className="text-xs font-black text-slate-400">ENGLISH (US)</span>
+                            <select
+                                value={language}
+                                onChange={(e) => setLanguage(e.target.value)}
+                                className="text-xs font-black text-slate-400 bg-transparent border-none focus:ring-0 cursor-pointer"
+                            >
+                                <option value="ENGLISH (US)">ENGLISH (US)</option>
+                                <option value="SPANISH">SPANISH</option>
+                                <option value="FRENCH">FRENCH</option>
+                            </select>
                         </div>
                     </div>
                 </div>

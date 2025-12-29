@@ -71,7 +71,7 @@ const Navbar = () => {
                                 className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-100 hover:bg-indigo-50 rounded-xl sm:rounded-2xl flex items-center justify-center border border-gray-200 hover:border-indigo-200 transition-colors"
                                 title="View Profile"
                             >
-                                <User className="w-5 h-5 sm:w-6 sm:h-6 text-gray-500" />
+                                <User className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600" />
                             </Link>
                         </div>
                     ) : (

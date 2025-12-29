@@ -223,33 +223,15 @@ const LandingPage = () => {
 
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
                             <Link to={hireLink} className="w-full sm:w-auto">
-                                <button className="w-full px-12 py-5 bg-indigo-600 text-white rounded-2xl font-black hover:bg-indigo-700 transition-all premium-shadow tracking-widest uppercase text-sm">
-                                    Start Hiring
+                                <button className="w-full px-12 py-5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-2xl font-black hover:scale-105 transition-all shadow-xl shadow-emerald-200 tracking-widest uppercase text-sm">
+                                    Get Help
                                 </button>
                             </Link>
                             <Link to={workLink} className="w-full sm:w-auto">
-                                <button className="w-full px-12 py-5 bg-gray-900 text-white rounded-2xl font-black hover:bg-black transition-all premium-shadow tracking-widest uppercase text-sm">
-                                    Find Jobs
+                                <button className="w-full px-12 py-5 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-2xl font-black hover:scale-105 transition-all shadow-xl shadow-amber-200 tracking-widest uppercase text-sm">
+                                    Get Paid
                                 </button>
                             </Link>
-                        </div>
-
-                        <div className="mt-16 flex items-center justify-center gap-8 grayscale opacity-50">
-                            {/* Placeholder for "Trusted by" or Platform Stats */}
-                            <div className="flex flex-col items-center">
-                                <span className="text-3xl font-black text-gray-900">500+</span>
-                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Active Jobs</span>
-                            </div>
-                            <div className="w-[1px] h-8 bg-gray-200"></div>
-                            <div className="flex flex-col items-center">
-                                <span className="text-3xl font-black text-gray-900">1.2k</span>
-                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Verified Pros</span>
-                            </div>
-                            <div className="w-[1px] h-8 bg-gray-200"></div>
-                            <div className="flex flex-col items-center">
-                                <span className="text-3xl font-black text-gray-900">4.9/5</span>
-                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Client Rating</span>
-                            </div>
                         </div>
                     </div>
                 </div>

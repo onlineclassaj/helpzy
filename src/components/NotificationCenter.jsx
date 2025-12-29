@@ -12,7 +12,7 @@ const NotificationCenter = () => {
         <div className="relative">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="relative p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all rounded-xl flex items-center justify-center"
+                className="relative p-2 text-indigo-600 hover:bg-indigo-50 transition-all rounded-xl flex items-center justify-center"
             >
                 <Bell className="w-5 h-5" />
                 {unreadCount > 0 && (
