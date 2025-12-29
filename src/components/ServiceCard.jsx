@@ -102,7 +102,7 @@ const ServiceCard = ({ service, isOwner = false }) => {
                             )}
                             <button
                                 onClick={handleViewQuotes}
-                                className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white text-xs font-bold rounded-lg hover:bg-indigo-700 transition-colors"
+                                className="flex items-center gap-1.5 px-5 py-2.5 bg-indigo-600 text-white text-sm font-bold rounded-lg hover:bg-indigo-700 transition-colors shadow-sm"
                             >
                                 <Eye className="w-4 h-4" />
                                 View Quotes
@@ -147,7 +147,7 @@ const ServiceCard = ({ service, isOwner = false }) => {
                             )}
                             <button
                                 onClick={handleQuoteClick}
-                                className="flex items-center gap-1.5 px-4 py-2 premium-gradient text-white text-xs font-bold rounded-lg hover:opacity-90 transition-all shadow-sm"
+                                className="flex items-center gap-1.5 px-5 py-2.5 premium-gradient text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all shadow-sm"
                             >
                                 <MessageSquare className="w-4 h-4" />
                                 Send Quote
