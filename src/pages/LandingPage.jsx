@@ -14,7 +14,7 @@ const LandingPage = () => {
     return (
         <div className="min-h-screen bg-slate-50 overflow-x-hidden">
             {/* Hero Section */}
-            <section className="relative pt-32 pb-24 lg:pt-48 lg:pb-32 overflow-hidden">
+            <section className="relative pt-24 pb-24 lg:pt-32 lg:pb-32 overflow-hidden">
                 {/* Animated Background Blobs */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none overflow-hidden">
                     <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-200/40 rounded-full mix-blend-multiply filter blur-[120px] animate-blob"></div>
@@ -24,49 +24,30 @@ const LandingPage = () => {
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="text-center">
-                        {/* 1. Main Branding - Dominant */}
+                        {/* 1. Main Branding - Moved Up */}
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.7 }}
-                            className="mb-6"
+                            className="mb-4"
                         >
                             <h1 className="text-6xl sm:text-8xl font-black text-gray-900 tracking-tighter flex flex-col items-center justify-center gap-2">
                                 <span className="premium-gradient text-transparent bg-clip-text drop-shadow-sm">HELPZY</span>
                             </h1>
-                            <p className="mt-4 text-lg sm:text-2xl font-bold text-gray-600 max-w-xl mx-auto">
+                            <p className="mt-3 text-lg sm:text-2xl font-bold text-gray-600 max-w-xl mx-auto">
                                 Find work. Hire services. <span className="text-indigo-600">Simple & fast.</span>
                             </p>
                         </motion.div>
 
-                        {/* 2. Secondary Tagline - Smaller */}
-                        <motion.h2
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.7, delay: 0.2 }}
-                            className="text-2xl sm:text-4xl font-bold tracking-tight text-gray-400 mb-8 sm:mb-12"
-                        >
-                            Get Help. <span className="text-gray-900">Get Paid.</span>
-                        </motion.h2>
-
-                        {/* 3. Description - Even smaller */}
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.7, delay: 0.3 }}
-                            className="max-w-xl mx-auto text-base sm:text-lg text-gray-500 mb-10 leading-relaxed font-medium"
-                        >
-                            A seamless, secure way to connect and collaborate.
-                        </motion.p>
-
+                        {/* 2. Tiles Section - Moved UP here */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.7, delay: 0.4 }}
-                            className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto"
+                            transition={{ duration: 0.7, delay: 0.2 }}
+                            className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto mb-16"
                         >
                             {/* Hire Tile */}
-                            <Link to={hireLink} className="block group h-full">
+                            <Link to={hireLink} className="block group h-full text-left">
                                 <motion.div
                                     whileHover={{ scale: 1.03, y: -4 }}
                                     whileTap={{ scale: 0.98 }}
@@ -77,9 +58,9 @@ const LandingPage = () => {
                                         <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-white/30 transition-colors">
                                             <Search className="w-6 h-6 text-white" />
                                         </div>
-                                        <h3 className="text-xl sm:text-2xl font-black mb-2">I want to Hire</h3>
-                                        <p className="text-sm text-white/90 mb-4 flex-1">Post a task and get quotes from professionals</p>
-                                        <div className="flex items-center text-xs font-bold text-white/70 group-hover:text-white transition-colors">
+                                        <h3 className="text-xl sm:text-2xl font-black mb-2 uppercase tracking-tighter">I want to Hire</h3>
+                                        <p className="text-sm text-white/90 mb-4 flex-1 font-medium">Post a task and get quotes from professionals</p>
+                                        <div className="flex items-center text-[10px] font-black tracking-widest text-white/70 group-hover:text-white transition-colors uppercase">
                                             <span>GET STARTED</span>
                                             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                                         </div>
@@ -87,27 +68,41 @@ const LandingPage = () => {
                                 </motion.div>
                             </Link>
 
-                            {/* Work Tile */}
-                            <Link to={workLink} className="block group h-full">
+                            {/* Work Tile (Rose Theme) */}
+                            <Link to={workLink} className="block group h-full text-left">
                                 <motion.div
                                     whileHover={{ scale: 1.03, y: -4 }}
                                     whileTap={{ scale: 0.98 }}
-                                    className="bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-700 text-white p-6 sm:p-8 rounded-3xl shadow-2xl hover:shadow-purple-400/50 transition-all duration-300 relative overflow-hidden h-full min-h-[200px] sm:min-h-[220px] flex flex-col"
+                                    className="bg-gradient-to-br from-rose-400 via-rose-500 to-pink-600 text-white p-6 sm:p-8 rounded-3xl shadow-2xl hover:shadow-rose-300/50 transition-all duration-300 relative overflow-hidden h-full min-h-[200px] sm:min-h-[220px] flex flex-col"
                                 >
                                     <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-8 translate-x-8 group-hover:scale-150 transition-transform duration-500"></div>
                                     <div className="relative z-10 flex flex-col flex-1">
                                         <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-white/30 transition-colors">
                                             <Briefcase className="w-6 h-6 text-white" />
                                         </div>
-                                        <h3 className="text-xl sm:text-2xl font-black mb-2">I want to Work</h3>
-                                        <p className="text-sm text-white/90 mb-4 flex-1">Browse jobs and start earning today</p>
-                                        <div className="flex items-center text-xs font-bold text-white/70 group-hover:text-white transition-colors">
+                                        <h3 className="text-xl sm:text-2xl font-black mb-2 uppercase tracking-tighter">I want to Work</h3>
+                                        <p className="text-sm text-white/90 mb-4 flex-1 font-medium">Browse jobs and start earning today</p>
+                                        <div className="flex items-center text-[10px] font-black tracking-widest text-white/70 group-hover:text-white transition-colors uppercase">
                                             <span>FIND JOBS</span>
                                             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                                         </div>
                                     </div>
                                 </motion.div>
                             </Link>
+                        </motion.div>
+
+                        {/* 3. Secondary Info - Now at the bottom */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.7, delay: 0.3 }}
+                        >
+                            <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-gray-400 mb-4">
+                                Get Help. <span className="text-gray-900 italic">Get Paid.</span>
+                            </h2>
+                            <p className="max-w-xl mx-auto text-base sm:text-lg text-gray-500 leading-relaxed font-bold">
+                                A seamless, secure way to connect and collaborate.
+                            </p>
                         </motion.div>
                     </div>
                 </div>
