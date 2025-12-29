@@ -39,7 +39,7 @@ const Profile = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-gray-50 pt-24 pb-8 px-4 sm:px-6">
+        <div className="min-h-screen bg-gray-50 pt-24 sm:pt-28 pb-8 px-4 sm:px-6">
             <div className="max-w-2xl mx-auto">
                 <Link to="/" className="inline-flex items-center text-gray-500 hover:text-gray-900 mb-6 transition-colors">
                     <ArrowLeft className="w-4 h-4 mr-1" />

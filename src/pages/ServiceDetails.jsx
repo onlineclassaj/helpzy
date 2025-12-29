@@ -37,12 +37,14 @@ const ServiceDetails = () => {
     const isOwner = user && service.user_id === user.id;
 
     return (
-        <div className="min-h-screen bg-gray-50 pt-20 sm:pt-24 pb-8 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gray-50 pt-24 pb-8 px-4 sm:px-6 lg:px-8">
             <div className="max-w-5xl mx-auto">
-                <Link to={isOwner ? "/my-posts" : "/find-work"} className="inline-flex items-center text-gray-500 hover:text-gray-900 mb-6 transition-colors relative z-10">
-                    <ArrowLeft className="w-4 h-4 mr-1" />
-                    {isOwner ? "Back to My Posts" : "Back to Jobs"}
-                </Link>
+                <div className="mt-2 mb-6">
+                    <Link to={isOwner ? "/my-posts" : "/find-work"} className="inline-flex items-center text-gray-500 hover:text-gray-900 transition-colors relative z-10">
+                        <ArrowLeft className="w-4 h-4 mr-1" />
+                        {isOwner ? "Back to My Posts" : "Back to Jobs"}
+                    </Link>
+                </div>
 
                 {/* Service Info Header */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 mb-8">

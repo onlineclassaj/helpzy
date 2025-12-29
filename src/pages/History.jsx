@@ -30,7 +30,7 @@ const History = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.2 }}
-            className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-32 pb-12 relative"
+            className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-12 relative"
         >
             <Link to="/hire" className="inline-flex items-center text-gray-500 hover:text-gray-900 mb-6 transition-colors">
                 <ArrowLeft className="w-4 h-4 mr-1" />

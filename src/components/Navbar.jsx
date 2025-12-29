@@ -23,16 +23,16 @@ const Navbar = () => {
     const shouldBeFixed = isHomePage || isServiceDetails || isLoginPage || isProfilePage;
 
     const navClasses = shouldBeFixed
-        ? "fixed top-0 sm:top-4 left-0 sm:left-1/2 sm:-translate-x-1/2 z-[100] w-[calc(100%-1.5rem)] sm:w-[calc(100%-2rem)] max-w-5xl transition-all duration-300 left-1/2 -translate-x-1/2"
-        : "relative w-[calc(100%-1.5rem)] sm:w-full mx-auto sm:mx-0 transition-all duration-300 z-[100] my-2 sm:my-0";
+        ? "fixed top-2 sm:top-4 left-0 right-0 z-[100] px-3 sm:px-4 max-w-5xl mx-auto transition-all duration-300"
+        : "relative px-3 sm:px-0 w-full mx-auto transition-all duration-300 z-[100] mt-2 sm:mt-0";
 
     const cardClasses = shouldBeFixed
-        ? "glass-card sm:rounded-[24px] px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between premium-shadow border-b sm:border border-gray-100"
+        ? "glass-card rounded-[24px] px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between premium-shadow border-b sm:border border-gray-100"
         : "bg-white/95 backdrop-blur-sm px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between shadow-sm border-b border-gray-100";
 
-    // Override for Home Page to ensure full masking
+    // Override for Home Page to ensure blur behavior while maintaining masking
     const finalCardClasses = isHomePage
-        ? "bg-white sm:rounded-[24px] px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between premium-shadow border-b sm:border border-gray-100 z-[100]"
+        ? "glass-card rounded-[24px] px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between premium-shadow border sm:border-gray-100 z-[100]"
         : cardClasses;
 
     return (
@@ -43,20 +43,26 @@ const Navbar = () => {
                         <div className="w-10 h-10 sm:w-12 sm:h-12 premium-gradient rounded-xl sm:rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200 group-hover:rotate-6 transition-transform text-base sm:text-xl font-black">
                             H
                         </div>
-                        <span className="hidden xs:block">Helpzy</span>
-                        <span className="text-[8px] sm:text-[10px] font-black bg-indigo-50 text-indigo-600 px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-lg">v{APP_VERSION}</span>
+                        {isHomePage && (
+                            <>
+                                <span className="hidden xs:block">Helpzy</span>
+                                <span className="text-[8px] sm:text-[10px] font-black bg-indigo-50 text-indigo-600 px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-lg">v{APP_VERSION}</span>
+                            </>
+                        )}
                     </Link>
                 </div>
 
                 <div className="flex items-center gap-2 sm:gap-4">
                     {user ? (
                         <div className="flex items-center gap-2 sm:gap-3">
-                            <div className="hidden md:flex flex-col items-end">
-                                <span className="text-xs font-black text-gray-900 uppercase tracking-tighter">
-                                    {user.user_metadata?.full_name || 'Premium User'}
-                                </span>
-                                <span className="text-[10px] font-bold text-gray-400">VERIFIED PROFESSIONAL</span>
-                            </div>
+                            {isHomePage && (
+                                <div className="hidden md:flex flex-col items-end">
+                                    <span className="text-xs font-black text-gray-900 uppercase tracking-tighter">
+                                        {user.user_metadata?.full_name || 'Premium User'}
+                                    </span>
+                                    <span className="text-[10px] font-bold text-gray-400">VERIFIED PROFESSIONAL</span>
+                                </div>
+                            )}
                             <NotificationCenter />
                             <div className="hidden xs:block w-[1px] h-6 bg-gray-200 mx-1"></div>
                             <Link
@@ -66,14 +72,18 @@ const Navbar = () => {
                             >
                                 <User className="w-5 h-5 sm:w-6 sm:h-6 text-gray-500" />
                             </Link>
-                            <div className="w-[1px] h-6 bg-gray-200 mx-1"></div>
-                            <button
-                                onClick={handleLogout}
-                                className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 hover:text-rose-600 hover:bg-rose-50 transition-all rounded-xl sm:rounded-2xl flex items-center justify-center"
-                                title="Logout"
-                            >
-                                <LogOut className="w-5 h-5 sm:w-6 sm:h-6" />
-                            </button>
+                            {isHomePage && (
+                                <>
+                                    <div className="w-[1px] h-6 bg-gray-200 mx-1"></div>
+                                    <button
+                                        onClick={handleLogout}
+                                        className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 hover:text-rose-600 hover:bg-rose-50 transition-all rounded-xl sm:rounded-2xl flex items-center justify-center"
+                                        title="Logout"
+                                    >
+                                        <LogOut className="w-5 h-5 sm:w-6 sm:h-6" />
+                                    </button>
+                                </>
+                            )}
                         </div>
                     ) : (
                         location.pathname !== '/login' && (
