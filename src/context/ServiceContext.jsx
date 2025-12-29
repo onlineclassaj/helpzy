@@ -23,7 +23,7 @@ export const ServiceProvider = ({ children }) => {
     // Fetch services from Supabase
     const fetchServices = async () => {
         setLoading(true);
-        console.log('--- RECOVERY_FETCH_V2.3.1 (Multi-Step) ---');
+        console.log('--- FETCH_V2.3.5 (Stable) ---');
         try {
             if (!supabase) {
                 console.error('Supabase client missing!');

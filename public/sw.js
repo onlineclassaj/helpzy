@@ -1,38 +1,60 @@
-const CACHE_NAME = 'helpzy-v4'; // Final push for new features
-const urlsToCache = [
-    '/',
-    '/index.html'
-];
+const CACHE_VERSION = 'v2.3.5';
+const CACHE_NAME = `helpzy-${CACHE_VERSION}`;
 
-// Install event - cache resources
+// Install event - clean start, don't precache
 self.addEventListener('install', (event) => {
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then((cache) => {
-                console.log('Opened cache v2');
-                return cache.addAll(urlsToCache);
-            })
-    );
-    self.skipWaiting();
+    console.log(`[SW ${CACHE_VERSION}] Installing...`);
+    self.skipWaiting(); // Activate immediately
 });
 
-// Fetch event - Network-First for core assets, Exclude API
+// Activate event - AGGRESSIVELY delete all old caches
+self.addEventListener('activate', (event) => {
+    console.log(`[SW ${CACHE_VERSION}] Activating...`);
+    event.waitUntil(
+        caches.keys().then((cacheNames) => {
+            return Promise.all(
+                cacheNames.map((cacheName) => {
+                    // Delete ALL caches that don't match current version
+                    if (cacheName !== CACHE_NAME) {
+                        console.log(`[SW ${CACHE_VERSION}] Deleting old cache:`, cacheName);
+                        return caches.delete(cacheName);
+                    }
+                })
+            );
+        }).then(() => {
+            console.log(`[SW ${CACHE_VERSION}] Claiming clients...`);
+            return self.clients.claim();
+        })
+    );
+});
+
+// Fetch event - NETWORK-ONLY for critical files, no caching of app shell
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
 
     // 1. SECURITY: Only handle http/https
     if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
 
-    // 2. EXCLUDE API: Never cache Supabase/API calls
+    // 2. NEVER CACHE API CALLS
     if (url.hostname.includes('supabase.co')) {
-        return; // Let it go to network normally
+        return; // Let browser handle normally
     }
 
-    // 3. NETWORK-FIRST strategy for everything else (Assets)
+    // 3. NEVER CACHE critical files - always fetch fresh
+    const neverCache = ['index.html', 'sw.js', 'version.json', 'manifest.json'];
+    if (neverCache.some(file => url.pathname.endsWith(file)) || url.pathname === '/') {
+        event.respondWith(
+            fetch(event.request, { cache: 'no-store' })
+                .catch(() => caches.match(event.request))
+        );
+        return;
+    }
+
+    // 4. For all other assets: Network-first, fallback to cache
     event.respondWith(
         fetch(event.request)
             .then((response) => {
-                // If network works, update cache and return
+                // Only cache successful same-origin responses
                 if (response && response.status === 200 && response.type === 'basic') {
                     const responseToCache = response.clone();
                     caches.open(CACHE_NAME).then((cache) => {
@@ -42,44 +64,11 @@ self.addEventListener('fetch', (event) => {
                 return response;
             })
             .catch(() => {
-                // If network fails (offline), try cache
+                // Offline fallback
                 return caches.match(event.request);
             })
     );
 });
-
-// Activate event - clean up old caches
-self.addEventListener('activate', (event) => {
-    const cacheWhitelist = [CACHE_NAME];
-    event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (cacheWhitelist.indexOf(cacheName) === -1) {
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        })
-    );
-    self.clients.claim();
-});
-
-// Background Sync - retry failed requests when back online
-self.addEventListener('sync', (event) => {
-    if (event.tag === 'sync-quotes' || event.tag === 'sync-posts') {
-        event.waitUntil(
-            // Retrieve queued requests from IndexedDB and retry them
-            syncQueuedRequests(event.tag)
-        );
-    }
-});
-
-async function syncQueuedRequests(tag) {
-    // This would integrate with IndexedDB to store/retrieve failed requests
-    console.log(`Syncing queued requests for: ${tag}`);
-    // Implementation would retrieve and retry failed API calls
-}
 
 // Listen for skip waiting message from update notification
 self.addEventListener('message', (event) => {
