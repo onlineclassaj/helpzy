@@ -24,36 +24,39 @@ const LandingPage = () => {
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="text-center">
-                        {/* New Branding Section */}
+                        {/* 1. Main Branding - Dominant */}
                         <motion.div
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.7 }}
-                            className="mb-8"
+                            className="mb-6"
                         >
-                            <h2 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center justify-center gap-3">
-                                <span className="text-3xl sm:text-4xl">HELPZY</span>
-                                <span className="w-2 h-2 rounded-full bg-indigo-600"></span>
-                                <span className="text-base sm:text-xl font-medium text-gray-500">Find work. Hire services. Simple & fast.</span>
-                            </h2>
+                            <h1 className="text-6xl sm:text-8xl font-black text-gray-900 tracking-tighter flex flex-col items-center justify-center gap-2">
+                                <span className="premium-gradient text-transparent bg-clip-text drop-shadow-sm">HELPZY</span>
+                            </h1>
+                            <p className="mt-4 text-lg sm:text-2xl font-bold text-gray-600 max-w-xl mx-auto">
+                                Find work. Hire services. <span className="text-indigo-600">Simple & fast.</span>
+                            </p>
                         </motion.div>
 
-                        <motion.h1
+                        {/* 2. Secondary Tagline - Smaller */}
+                        <motion.h2
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.7, delay: 0.2 }}
-                            className="text-6xl md:text-8xl font-extrabold tracking-tight text-gray-900 mb-6"
+                            className="text-2xl sm:text-4xl font-bold tracking-tight text-gray-400 mb-8 sm:mb-12"
                         >
-                            Get Help. <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">Get Paid.</span>
-                        </motion.h1>
+                            Get Help. <span className="text-gray-900">Get Paid.</span>
+                        </motion.h2>
 
+                        {/* 3. Description - Even smaller */}
                         <motion.p
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.7, delay: 0.3 }}
-                            className="max-w-2xl mx-auto text-xl text-gray-500 mb-12 leading-relaxed"
+                            className="max-w-xl mx-auto text-base sm:text-lg text-gray-500 mb-10 leading-relaxed font-medium"
                         >
-                            The premium workspace for professionals and clients. Experience a seamless, secure, and purely modern way to connect and collaborate.
+                            A seamless, secure way to connect and collaborate.
                         </motion.p>
 
                         <motion.div

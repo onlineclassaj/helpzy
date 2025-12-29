@@ -39,21 +39,21 @@ const HireDashboard = () => {
                     My Active Requests
                 </h2>
                 <div className="flex items-center gap-3 self-start lg:self-auto w-full lg:w-auto">
-                    {/* History Button */}
+                    {/* History Button - Smaller, Secondary */}
                     <Link
                         to="/history"
-                        className="flex-1 lg:flex-none bg-gray-100 text-gray-700 px-6 py-4 rounded-2xl hover:bg-gray-200 transition-all font-bold flex items-center justify-center gap-2"
+                        className="flex-none bg-gray-100 text-gray-600 px-5 py-3 rounded-2xl hover:bg-gray-200 transition-all font-bold text-sm flex items-center justify-center gap-2"
                     >
                         <List className="w-5 h-5" />
-                        <span className="whitespace-nowrap">History</span>
+                        <span className="hidden xs:inline">History</span>
                     </Link>
 
-                    {/* Create Button - Green */}
+                    {/* Create Button - Larger, Primary */}
                     <Link
                         to="/post-service"
-                        className="flex-1 lg:flex-none bg-emerald-600 text-white px-6 py-4 rounded-2xl hover:bg-emerald-700 transition-all font-bold premium-shadow flex items-center justify-center gap-2 group"
+                        className="flex-1 lg:flex-none bg-emerald-600 text-white px-8 py-4 rounded-2xl hover:bg-emerald-700 transition-all font-bold text-lg premium-shadow flex items-center justify-center gap-2 group"
                     >
-                        <PlusCircle className="w-5 h-5 group-hover:rotate-90 transition-transform" />
+                        <PlusCircle className="w-6 h-6 group-hover:rotate-90 transition-transform" />
                         <span className="whitespace-nowrap">Create New Post</span>
                     </Link>
                 </div>
