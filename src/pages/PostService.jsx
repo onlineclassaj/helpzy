@@ -65,7 +65,7 @@ const PostService = () => {
 
             const result = await addService({ ...formData, image_url: imageUrl });
             if (result.success) {
-                navigate('/hire');
+                navigate('/hire', { replace: true });
             } else {
                 setError(result.message || 'Failed to post service request.');
                 setLoading(false);

@@ -23,7 +23,7 @@ export const ServiceProvider = ({ children }) => {
     // Fetch services from Supabase
     const fetchServices = async () => {
         setLoading(true);
-        console.log('--- FETCH_SERVICES_V2.2 ---');
+        console.log('--- FETCH_SERVICES_V3.0 (Robust) ---');
         try {
             if (!supabase) {
                 console.error('Supabase client missing!');
@@ -31,52 +31,47 @@ export const ServiceProvider = ({ children }) => {
                 return;
             }
 
-            // Fetch services with profiles and quotes
-            let { data: rawData, error: dbError } = await supabase
+            // 1. Fetch all services
+            const { data: servicesData, error: sError } = await supabase
                 .from('services')
-                .select(`
-                    *,
-                    profiles (full_name, rating),
-                    quotes (
-                        *,
-                        profiles (full_name, rating)
-                    )
-                `)
+                .select('*, profiles(full_name, rating)')
                 .order('created_at', { ascending: false });
 
-            if (dbError) {
-                console.error('Complex fetch failed, attempting simple fetch:', dbError);
-                // Fallback to simple fetch if joins fail
-                const { data: simpleData, error: simpleError } = await supabase
-                    .from('services')
-                    .select('*')
-                    .order('created_at', { ascending: false });
+            if (sError) throw sError;
 
-                if (simpleError) throw simpleError;
-                rawData = simpleData;
+            // 2. Fetch all quotes (RLS will filter what the user can see)
+            const { data: quotesData, error: qError } = await supabase
+                .from('quotes')
+                .select('*, profiles(full_name, rating)')
+                .order('created_at', { ascending: false });
+
+            if (qError) {
+                console.warn('Quote fetch failed or limited:', qError);
             }
 
-            const processed = (rawData || []).map(item => {
-                if (!item) return null;
+            // 3. Merge quotes into their respective services
+            const processed = (servicesData || []).map(service => {
+                const serviceQuotes = (quotesData || []).filter(q => q.service_id === service.id);
+
                 return {
-                    ...item,
-                    createdAt: item.created_at || new Date().toISOString(),
-                    title: item.title || 'Untitled',
-                    category: item.category || 'Other',
-                    description: item.description || '',
-                    location: item.location || 'Not specified',
-                    clientName: item.profiles?.full_name || 'Anonymous User',
-                    clientRating: item.profiles?.rating || 0,
-                    quotes: Array.isArray(item.quotes) ? item.quotes.map(q => ({
+                    ...service,
+                    createdAt: service.created_at || new Date().toISOString(),
+                    title: service.title || 'Untitled',
+                    category: service.category || 'Other',
+                    description: service.description || '',
+                    location: service.location || 'Not specified',
+                    clientName: service.profiles?.full_name || 'Anonymous User',
+                    clientRating: service.profiles?.rating || 0,
+                    quotes: serviceQuotes.map(q => ({
                         ...q,
                         createdAt: q.created_at || new Date().toISOString(),
                         providerName: q.profiles?.full_name || 'Anonymous Provider',
                         providerRating: q.profiles?.rating || 0
-                    })) : []
+                    }))
                 };
-            }).filter(Boolean);
+            });
 
-            console.log('Processed Services Count:', processed.length);
+            console.log(`Processed ${processed.length} services with merged quotes.`);
             setServices(processed);
         } catch (err) {
             console.error('Global Fetch Error:', err);

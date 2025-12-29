@@ -21,7 +21,7 @@ const WorkDashboard = () => {
             (service.location && service.location.toLowerCase().includes(locationSearch.toLowerCase()));
 
         // Hide user's own services from marketplace but NOT from My Sent Quotes (which is a different list anyway)
-        const isNotOwnService = service.client_id !== user.id;
+        const isNotOwnService = service.user_id !== user.id;
 
         return matchesCategory && matchesSearch && matchesLocation && isNotOwnService;
     });

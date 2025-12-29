@@ -139,6 +139,12 @@ const ServiceDetails = () => {
                                             <h4 className="font-bold text-gray-900">
                                                 {isOwner ? quote.providerName : `Provider ${index + 1}`}
                                             </h4>
+                                            {quote.status === 'accepted' && (
+                                                <span className="px-2 py-0.5 rounded text-[10px] font-black bg-green-50 text-green-700 uppercase">Accepted</span>
+                                            )}
+                                            {quote.status === 'pending' && (
+                                                <span className="px-2 py-0.5 rounded text-[10px] font-black bg-amber-50 text-amber-700 uppercase">Pending</span>
+                                            )}
                                             {quote.providerRating > 0 && (
                                                 <div className="flex items-center gap-1 bg-amber-50 px-2 py-0.5 rounded text-amber-700 text-[10px] font-black">
                                                     <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
