@@ -92,16 +92,16 @@ const LandingPage = () => {
                                 <motion.div
                                     whileHover={{ scale: 1.03, y: -4 }}
                                     whileTap={{ scale: 0.98 }}
-                                    className="bg-gradient-to-br from-slate-900 via-gray-900 to-zinc-900 text-white p-6 sm:p-8 rounded-3xl shadow-2xl hover:shadow-gray-400/50 transition-all duration-300 relative overflow-hidden h-full min-h-[200px] sm:min-h-[220px] flex flex-col border border-gray-800"
+                                    className="bg-gradient-to-br from-sky-500 via-blue-600 to-indigo-600 text-white p-6 sm:p-8 rounded-3xl shadow-2xl hover:shadow-sky-400/50 transition-all duration-300 relative overflow-hidden h-full min-h-[200px] sm:min-h-[220px] flex flex-col"
                                 >
                                     <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full -translate-y-8 translate-x-8 group-hover:scale-150 transition-transform duration-500"></div>
                                     <div className="relative z-10 flex flex-col flex-1">
-                                        <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-white/20 transition-colors">
+                                        <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-white/30 transition-colors">
                                             <Briefcase className="w-6 h-6 text-white" />
                                         </div>
                                         <h3 className="text-xl sm:text-2xl font-black mb-2">I want to Work</h3>
-                                        <p className="text-sm text-gray-400 mb-4 flex-1">Browse jobs and start earning today</p>
-                                        <div className="flex items-center text-xs font-bold text-gray-500 group-hover:text-white transition-colors">
+                                        <p className="text-sm text-blue-50/90 mb-4 flex-1">Browse jobs and start earning today</p>
+                                        <div className="flex items-center text-xs font-bold text-white/80 group-hover:text-white transition-colors">
                                             <span>FIND JOBS</span>
                                             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                                         </div>

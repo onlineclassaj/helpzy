@@ -30,9 +30,9 @@ const History = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.2 }}
-            className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-12 relative"
+            className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-12 relative"
         >
-            <Link to="/hire" className="inline-flex items-center text-gray-500 hover:text-gray-900 mb-6 transition-colors">
+            <Link to="/hire" className="inline-flex items-center text-gray-500 hover:text-gray-900 mb-2 transition-colors">
                 <ArrowLeft className="w-4 h-4 mr-1" />
                 Back to Active Requests
             </Link>
