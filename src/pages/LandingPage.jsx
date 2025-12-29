@@ -53,7 +53,7 @@ const LandingPage = () => {
                                 <motion.div
                                     whileHover={{ scale: 1.03, y: -4 }}
                                     whileTap={{ scale: 0.98 }}
-                                    className="bg-gradient-to-br from-gray-900 to-gray-800 text-white p-6 sm:p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 relative overflow-hidden"
+                                    className="bg-gradient-to-br from-gray-900 via-gray-800 to-indigo-900 text-white p-6 sm:p-8 rounded-3xl shadow-2xl hover:shadow-indigo-200/50 transition-all duration-300 relative overflow-hidden min-h-[200px] sm:min-h-[220px]"
                                 >
                                     <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full -translate-y-8 translate-x-8 group-hover:scale-150 transition-transform duration-500"></div>
                                     <div className="relative z-10">
@@ -75,7 +75,7 @@ const LandingPage = () => {
                                 <motion.div
                                     whileHover={{ scale: 1.03, y: -4 }}
                                     whileTap={{ scale: 0.98 }}
-                                    className="bg-white text-gray-900 p-6 sm:p-8 rounded-3xl shadow-xl hover:shadow-2xl border border-gray-100 transition-all duration-300 relative overflow-hidden"
+                                    className="bg-gradient-to-br from-white via-indigo-50/50 to-purple-50/50 text-gray-900 p-6 sm:p-8 rounded-3xl shadow-2xl hover:shadow-purple-200/50 border border-indigo-100 transition-all duration-300 relative overflow-hidden min-h-[200px] sm:min-h-[220px]"
                                 >
                                     <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-50 rounded-full -translate-y-8 translate-x-8 group-hover:scale-150 transition-transform duration-500"></div>
                                     <div className="relative z-10">
