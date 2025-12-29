@@ -23,8 +23,8 @@ const Navbar = () => {
     const shouldBeFixed = isHomePage || isServiceDetails || isLoginPage || isProfilePage;
 
     const navClasses = shouldBeFixed
-        ? "fixed top-0 sm:top-4 left-0 sm:left-1/2 sm:-translate-x-1/2 z-[100] w-full sm:w-[calc(100%-2rem)] max-w-5xl transition-all duration-300"
-        : "relative w-full transition-all duration-300 z-[100]";
+        ? "fixed top-0 sm:top-4 left-0 sm:left-1/2 sm:-translate-x-1/2 z-[100] w-[calc(100%-1.5rem)] sm:w-[calc(100%-2rem)] max-w-5xl transition-all duration-300 left-1/2 -translate-x-1/2"
+        : "relative w-[calc(100%-1.5rem)] sm:w-full mx-auto sm:mx-0 transition-all duration-300 z-[100] my-2 sm:my-0";
 
     const cardClasses = shouldBeFixed
         ? "glass-card sm:rounded-[24px] px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between premium-shadow border-b sm:border border-gray-100"

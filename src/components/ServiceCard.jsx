@@ -64,14 +64,16 @@ const ServiceCard = ({ service, isOwner = false }) => {
                                 <Clock className="w-3.5 h-3.5 mr-1" />
                                 {new Date(service.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                             </div>
-                            <button
-                                onClick={handleDeleteClick}
-                                disabled={isDeleting}
-                                className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
-                                title="Delete"
-                            >
-                                <Trash2 className="w-4 h-4" />
-                            </button>
+                            {service.status !== 'completed' && (
+                                <button
+                                    onClick={handleDeleteClick}
+                                    disabled={isDeleting}
+                                    className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                                    title="Delete"
+                                >
+                                    <Trash2 className="w-4 h-4" />
+                                </button>
+                            )}
                         </div>
 
                         {/* Content */}

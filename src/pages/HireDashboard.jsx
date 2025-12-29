@@ -45,10 +45,9 @@ const HireDashboard = () => {
                     {/* History Button - Smaller, Secondary */}
                     <Link
                         to="/history"
-                        className="flex-none bg-gray-100 text-gray-600 px-5 py-3 rounded-2xl hover:bg-gray-200 transition-all font-bold text-sm flex items-center justify-center gap-2"
+                        className="flex-none bg-gray-100 text-gray-600 px-6 py-3 rounded-2xl hover:bg-gray-200 transition-all font-bold text-sm flex items-center justify-center"
                     >
-                        <List className="w-5 h-5" />
-                        <span className="hidden xs:inline">History</span>
+                        History
                     </Link>
 
                     {/* Create Button - Larger, Primary */}
