@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useServices } from '../context/ServiceContext';
-import { ArrowLeft, User, MessageSquare, Clock, Send, MapPin, FileText, CheckCircle } from 'lucide-react';
+import { ArrowLeft, User, MessageSquare, Clock, Send, MapPin, FileText, CheckCircle, Star } from 'lucide-react';
 import QuoteModal from '../components/QuoteModal';
 
 const ServiceDetails = () => {
@@ -9,6 +9,7 @@ const ServiceDetails = () => {
     const { services, user, loading, acceptQuote } = useServices();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [acceptingId, setAcceptingId] = useState(null);
+    const [sortBy, setSortBy] = useState('newest'); // 'newest', 'price-low', 'price-high', 'rating'
 
     if (loading) {
         return (
@@ -97,16 +98,36 @@ const ServiceDetails = () => {
                     </div>
                 </div>
 
-                {/* Quotes Section */}
-                <div className="mb-6 flex items-center justify-between">
+                <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <h2 className="text-2xl font-bold text-gray-900">
                         {isOwner ? "Received Quotes" : "Current Bids"} ({service.quotes.length})
                     </h2>
+
+                    {service.quotes.length > 1 && (
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm text-gray-500 font-medium whitespace-nowrap">Sort by:</span>
+                            <select
+                                value={sortBy}
+                                onChange={(e) => setSortBy(e.target.value)}
+                                className="bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-sm font-semibold text-gray-700 focus:ring-2 focus:ring-indigo-500 outline-none transition-all cursor-pointer"
+                            >
+                                <option value="newest">Latest First</option>
+                                <option value="price-low">Lowest Price</option>
+                                <option value="price-high">Highest Price</option>
+                                <option value="rating">Top Rated Provider</option>
+                            </select>
+                        </div>
+                    )}
                 </div>
 
                 {service.quotes && service.quotes.length > 0 ? (
                     <div className="grid gap-4">
-                        {service.quotes.map((quote, index) => (
+                        {[...service.quotes].sort((a, b) => {
+                            if (sortBy === 'price-low') return a.amount - b.amount;
+                            if (sortBy === 'price-high') return b.amount - a.amount;
+                            if (sortBy === 'rating') return (b.providerRating || 0) - (a.providerRating || 0);
+                            return new Date(b.createdAt) - new Date(a.createdAt);
+                        }).map((quote, index) => (
                             <div key={index} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:border-indigo-300 transition-colors">
                                 <div className="flex flex-col md:flex-row justify-between gap-6">
                                     <div className="flex-1">
@@ -118,6 +139,12 @@ const ServiceDetails = () => {
                                             <h4 className="font-bold text-gray-900">
                                                 {isOwner ? quote.providerName : `Provider ${index + 1}`}
                                             </h4>
+                                            {quote.providerRating > 0 && (
+                                                <div className="flex items-center gap-1 bg-amber-50 px-2 py-0.5 rounded text-amber-700 text-[10px] font-black">
+                                                    <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                                                    {quote.providerRating.toFixed(1)}
+                                                </div>
+                                            )}
                                             <span className="text-xs text-gray-400 ml-2">
                                                 {new Date(quote.createdAt).toLocaleDateString()}
                                             </span>
@@ -148,14 +175,18 @@ const ServiceDetails = () => {
                                             </a>
                                         )}
 
-                                        {isOwner && service.status !== 'completed' && (
+                                        {isOwner && service.status !== 'completed' && quote.status !== 'accepted' && (
                                             <button
                                                 onClick={async () => {
+                                                    if (service.quotes.some(q => q.status === 'accepted')) {
+                                                        alert('You have already accepted a quote for this service.');
+                                                        return;
+                                                    }
                                                     setAcceptingId(quote.id);
                                                     await acceptQuote(service.id, quote.id);
                                                     setAcceptingId(null);
                                                 }}
-                                                disabled={acceptingId === quote.id}
+                                                disabled={acceptingId === quote.id || service.quotes.some(q => q.status === 'accepted')}
                                                 className="w-full bg-indigo-600 text-white font-medium py-2 rounded-lg hover:bg-indigo-700 transition-colors text-sm disabled:opacity-50"
                                             >
                                                 {acceptingId === quote.id ? "Accepting..." : "Accept Quote"}

@@ -36,10 +36,10 @@ export const ServiceProvider = ({ children }) => {
                 .from('services')
                 .select(`
                     *,
-                    profiles (full_name),
+                    profiles (full_name, rating),
                     quotes (
                         *,
-                        profiles (full_name)
+                        profiles (full_name, rating)
                     )
                 `)
                 .order('created_at', { ascending: false });
@@ -54,6 +54,8 @@ export const ServiceProvider = ({ children }) => {
 
                 if (simpleError) throw simpleError;
                 rawData = simpleData;
+            } else {
+                // If profiles join worked, data is in rawData
             }
 
             const processed = (rawData || []).map(item => {
@@ -66,10 +68,12 @@ export const ServiceProvider = ({ children }) => {
                     description: item.description || '',
                     location: item.location || 'Not specified',
                     clientName: item.profiles?.full_name || 'Anonymous User',
+                    clientRating: item.profiles?.rating || 0,
                     quotes: Array.isArray(item.quotes) ? item.quotes.map(q => ({
                         ...q,
                         createdAt: q.created_at || new Date().toISOString(),
-                        providerName: q.profiles?.full_name || 'Anonymous Provider'
+                        providerName: q.profiles?.full_name || 'Anonymous Provider',
+                        providerRating: q.profiles?.rating || 0
                     })) : []
                 };
             }).filter(Boolean);

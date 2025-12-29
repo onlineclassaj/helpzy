@@ -3,6 +3,7 @@ CREATE TABLE profiles (
   id UUID REFERENCES auth.users ON DELETE CASCADE PRIMARY KEY,
   full_name TEXT,
   avatar_url TEXT,
+  rating NUMERIC DEFAULT 0,
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
