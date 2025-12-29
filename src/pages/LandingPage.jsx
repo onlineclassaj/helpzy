@@ -24,6 +24,20 @@ const LandingPage = () => {
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="text-center">
+                        {/* New Branding Section */}
+                        <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.7 }}
+                            className="mb-8"
+                        >
+                            <h2 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center justify-center gap-3">
+                                <span className="text-3xl sm:text-4xl">HELPZY</span>
+                                <span className="w-2 h-2 rounded-full bg-indigo-600"></span>
+                                <span className="text-base sm:text-xl font-medium text-gray-500">Find work. Hire services. Simple & fast.</span>
+                            </h2>
+                        </motion.div>
+
                         <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}

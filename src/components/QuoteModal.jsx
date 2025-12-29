@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Send, CheckCircle, Paperclip } from 'lucide-react';
 import { useServices } from '../context/ServiceContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import Toast from './Toast';
 
 const QuoteModal = ({ isOpen, onClose, serviceId, serviceTitle }) => {
     const { addQuote, uploadFile } = useServices();
@@ -11,7 +12,7 @@ const QuoteModal = ({ isOpen, onClose, serviceId, serviceTitle }) => {
     const [attachmentName, setAttachmentName] = React.useState('');
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState('');
-    const [success, setSuccess] = React.useState(false);
+    const [showToast, setShowToast] = React.useState(false);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -48,13 +49,13 @@ const QuoteModal = ({ isOpen, onClose, serviceId, serviceTitle }) => {
             });
 
             if (result.success) {
-                setSuccess(true);
+                setShowToast(true);
                 setTimeout(() => {
                     setAmount('');
                     setMessage('');
                     setAttachment(null);
                     setAttachmentName('');
-                    setSuccess(false);
+                    setShowToast(false);
                     onClose();
                 }, 1500);
             } else {
@@ -95,13 +96,6 @@ const QuoteModal = ({ isOpen, onClose, serviceId, serviceTitle }) => {
                                 </div>
                             )}
 
-                            {success && (
-                                <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm flex items-center gap-2">
-                                    <CheckCircle className="w-4 h-4" />
-                                    Quote sent successfully!
-                                </div>
-                            )}
-
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Your Price (₹)</label>
                                 <input
@@ -111,7 +105,7 @@ const QuoteModal = ({ isOpen, onClose, serviceId, serviceTitle }) => {
                                     onChange={(e) => setAmount(e.target.value)}
                                     className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
                                     required
-                                    disabled={loading || success}
+                                    disabled={loading}
                                 />
                             </div>
 
@@ -124,7 +118,7 @@ const QuoteModal = ({ isOpen, onClose, serviceId, serviceTitle }) => {
                                     onChange={(e) => setMessage(e.target.value)}
                                     className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none transition-all resize-none"
                                     required
-                                    disabled={loading || success}
+                                    disabled={loading}
                                 ></textarea>
                             </div>
 
@@ -152,7 +146,7 @@ const QuoteModal = ({ isOpen, onClose, serviceId, serviceTitle }) => {
 
                             <button
                                 type="submit"
-                                disabled={loading || success}
+                                disabled={loading}
                                 className="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:transform-none"
                             >
                                 {loading ? (
@@ -163,11 +157,6 @@ const QuoteModal = ({ isOpen, onClose, serviceId, serviceTitle }) => {
                                         </svg>
                                         Sending...
                                     </>
-                                ) : success ? (
-                                    <>
-                                        Sent!
-                                        <CheckCircle className="w-5 h-5" />
-                                    </>
                                 ) : (
                                     <>
                                         Send Quote
@@ -176,10 +165,15 @@ const QuoteModal = ({ isOpen, onClose, serviceId, serviceTitle }) => {
                                 )}
                             </button>
                         </form>
-
                     </motion.div>
                 </div>
             )}
+            <Toast
+                isVisible={showToast}
+                message="Quote sent successfully!"
+                type="success"
+                onClose={() => setShowToast(false)}
+            />
         </AnimatePresence>
     );
 };

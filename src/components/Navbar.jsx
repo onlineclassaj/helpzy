@@ -15,12 +15,27 @@ const Navbar = () => {
         navigate('/');
     };
 
+    // Determine if header should be fixed (only on home page and service details)
+    const isHomePage = location.pathname === '/';
+    const isServiceDetails = location.pathname.startsWith('/service/');
+    const isLoginPage = location.pathname === '/login';
+    const isProfilePage = location.pathname === '/profile';
+    const shouldBeFixed = isHomePage || isServiceDetails || isLoginPage || isProfilePage;
+
+    const navClasses = shouldBeFixed
+        ? "fixed top-0 sm:top-4 left-0 sm:left-1/2 sm:-translate-x-1/2 z-[100] w-full sm:w-[calc(100%-2rem)] max-w-5xl transition-all duration-300"
+        : "sticky top-0 z-[100] w-full transition-all duration-300";
+
+    const cardClasses = shouldBeFixed
+        ? "glass-card sm:rounded-[24px] px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between premium-shadow border-b sm:border border-gray-100"
+        : "bg-white/95 backdrop-blur-sm px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between shadow-sm border-b border-gray-100";
+
     return (
-        <nav className="fixed top-0 sm:top-4 left-0 sm:left-1/2 sm:-translate-x-1/2 z-[100] w-full sm:w-[calc(100%-2rem)] max-w-5xl transition-all duration-300">
-            <div className="glass-card sm:rounded-[24px] px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between premium-shadow border-b sm:border border-gray-100">
+        <nav className={navClasses}>
+            <div className={cardClasses}>
                 <div className="flex items-center gap-4 sm:gap-8">
                     <Link to="/" className="text-xl sm:text-2xl font-black text-gray-900 tracking-tighter flex items-center gap-2 group">
-                        <div className="w-9 h-9 sm:w-11 sm:h-11 premium-gradient rounded-xl sm:rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200 group-hover:rotate-6 transition-transform text-sm sm:text-lg font-black">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 premium-gradient rounded-xl sm:rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200 group-hover:rotate-6 transition-transform text-base sm:text-xl font-black">
                             H
                         </div>
                         <span className="hidden xs:block">Helpzy</span>
@@ -38,28 +53,27 @@ const Navbar = () => {
                                 <span className="text-[10px] font-bold text-gray-400">VERIFIED PROFESSIONAL</span>
                             </div>
                             <NotificationCenter />
-                            <div className="hidden xs:block w-[1px] h-5 bg-gray-200 mx-1"></div>
-                            {/* Profile Icon - Now clickable */}
+                            <div className="hidden xs:block w-[1px] h-6 bg-gray-200 mx-1"></div>
                             <Link
                                 to="/profile"
-                                className="w-9 h-9 sm:w-11 sm:h-11 bg-gray-100 hover:bg-indigo-50 rounded-xl sm:rounded-2xl flex items-center justify-center border border-gray-200 hover:border-indigo-200 transition-colors"
+                                className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-100 hover:bg-indigo-50 rounded-xl sm:rounded-2xl flex items-center justify-center border border-gray-200 hover:border-indigo-200 transition-colors"
                                 title="View Profile"
                             >
-                                <User className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+                                <User className="w-5 h-5 sm:w-6 sm:h-6 text-gray-500" />
                             </Link>
-                            <div className="w-[1px] h-5 bg-gray-200 mx-1"></div>
+                            <div className="w-[1px] h-6 bg-gray-200 mx-1"></div>
                             <button
                                 onClick={handleLogout}
-                                className="w-9 h-9 sm:w-11 sm:h-11 text-gray-400 hover:text-rose-600 hover:bg-rose-50 transition-all rounded-xl sm:rounded-2xl flex items-center justify-center"
+                                className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 hover:text-rose-600 hover:bg-rose-50 transition-all rounded-xl sm:rounded-2xl flex items-center justify-center"
                                 title="Logout"
                             >
-                                <LogOut className="w-4 h-4 sm:w-5 sm:h-5" />
+                                <LogOut className="w-5 h-5 sm:w-6 sm:h-6" />
                             </button>
                         </div>
                     ) : (
                         location.pathname !== '/login' && (
                             <Link to="/login">
-                                <button className="bg-gray-900 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl hover:bg-black transition-all font-bold text-xs sm:text-sm premium-shadow">
+                                <button className="bg-gray-900 text-white px-5 sm:px-6 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl hover:bg-black transition-all font-bold text-xs sm:text-sm premium-shadow">
                                     Sign In
                                 </button>
                             </Link>
